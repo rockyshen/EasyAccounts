@@ -11,7 +11,20 @@ import SwiftUI
 struct EasyAccountsApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabView {
+                OverView()
+                    .tabItem { Label("总览", systemImage: "house") }
+                
+                FlowView()
+                    .tabItem { Label("流水", systemImage: "arrow.up") }
+                
+                ScreenView()
+                    .tabItem { Label("筛选", systemImage: "line.3.horizontal.decrease")}
+                
+                SettingView()
+                    .tabItem { Label("设置", systemImage: "gear") }
+                
+            }
         }
     }
 }

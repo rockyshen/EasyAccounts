@@ -11,6 +11,11 @@
 		64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E412D4E134900EE1521 /* ContentView.swift */; };
 		64DA4E442D4E134B00EE1521 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64DA4E432D4E134B00EE1521 /* Assets.xcassets */; };
 		64DA4E472D4E134B00EE1521 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64DA4E462D4E134B00EE1521 /* Preview Assets.xcassets */; };
+		64DA4E502D4FABB700EE1521 /* OverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E4F2D4FABB700EE1521 /* OverView.swift */; };
+		64DA4E522D4FB14900EE1521 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E512D4FB14900EE1521 /* FlowView.swift */; };
+		64DA4E542D4FB34600EE1521 /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E532D4FB34600EE1521 /* ScreenView.swift */; };
+		64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E552D4FB38900EE1521 /* SettingView.swift */; };
+		64DA4E592D4FB6F800EE1521 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E582D4FB6F800EE1521 /* Transaction.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +24,11 @@
 		64DA4E412D4E134900EE1521 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		64DA4E432D4E134B00EE1521 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		64DA4E462D4E134B00EE1521 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		64DA4E4F2D4FABB700EE1521 /* OverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverView.swift; sourceTree = "<group>"; };
+		64DA4E512D4FB14900EE1521 /* FlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowView.swift; sourceTree = "<group>"; };
+		64DA4E532D4FB34600EE1521 /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
+		64DA4E552D4FB38900EE1521 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		64DA4E582D4FB6F800EE1521 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,10 +61,15 @@
 		64DA4E3E2D4E134900EE1521 /* EasyAccounts */ = {
 			isa = PBXGroup;
 			children = (
+				64DA4E572D4FB6E700EE1521 /* data */,
 				64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */,
 				64DA4E412D4E134900EE1521 /* ContentView.swift */,
 				64DA4E432D4E134B00EE1521 /* Assets.xcassets */,
 				64DA4E452D4E134B00EE1521 /* Preview Content */,
+				64DA4E4F2D4FABB700EE1521 /* OverView.swift */,
+				64DA4E512D4FB14900EE1521 /* FlowView.swift */,
+				64DA4E532D4FB34600EE1521 /* ScreenView.swift */,
+				64DA4E552D4FB38900EE1521 /* SettingView.swift */,
 			);
 			path = EasyAccounts;
 			sourceTree = "<group>";
@@ -65,6 +80,14 @@
 				64DA4E462D4E134B00EE1521 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		64DA4E572D4FB6E700EE1521 /* data */ = {
+			isa = PBXGroup;
+			children = (
+				64DA4E582D4FB6F800EE1521 /* Transaction.swift */,
+			);
+			path = data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,8 +160,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64DA4E592D4FB6F800EE1521 /* Transaction.swift in Sources */,
+				64DA4E502D4FABB700EE1521 /* OverView.swift in Sources */,
+				64DA4E522D4FB14900EE1521 /* FlowView.swift in Sources */,
 				64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */,
+				64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */,
 				64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */,
+				64DA4E542D4FB34600EE1521 /* ScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
