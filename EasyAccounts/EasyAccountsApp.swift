@@ -16,7 +16,7 @@ struct EasyAccountsApp: App {
                     .tabItem { Label("总览", systemImage: "house") }
                 
                 FlowView()
-                    .tabItem { Label("流水", systemImage: "arrow.up") }
+                    .tabItem { Label("流水", systemImage: "square.and.pencil") }
                 
                 ScreenView()
                     .tabItem { Label("筛选", systemImage: "line.3.horizontal.decrease")}

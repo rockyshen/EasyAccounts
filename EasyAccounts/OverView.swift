@@ -13,14 +13,15 @@ struct OverView: View {
             // Header
             HStack {
                 Text("总览")
-                    .font(.headline)
+                    .font(.largeTitle)
                     .foregroundColor(.white)
                 Spacer()
                 HStack {
                     Button(action: {
                         // Add functionality for menu button
                     }) {
-                        Image(systemName: "ellipsis")
+                        Text("财务分析")
+                            .font(.subheadline)
                             .foregroundColor(.white)
                     }
                     .padding()
@@ -44,57 +45,82 @@ struct OverView: View {
             
             // Income and expenditure
             VStack(alignment: .leading) {
-                Text("当年收支情况")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text("本年总收入")
+                    Text("当年收支情况").foregroundColor(.blue)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 10) // 设置左右边距
+                .overlay(
+                    HStack {
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Spacer()
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                    }
+                )
+                .padding(.vertical, 10) // 设置上下边距
+            
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("本年总收入：")
                             .font(.subheadline)
                             .foregroundColor(.black)
                         Text("¥300.00")
                             .font(.headline)
-                            .foregroundColor(.blue)
+                            .foregroundColor(.green)
                     }
-                    Spacer()
-                    VStack(alignment: .leading) {
-                        Text("本年总支出")
+
+                    HStack {
+                        Text("本年总支出：")
                             .font(.subheadline)
                             .foregroundColor(.black)
                         Text("¥33.00")
                             .font(.headline)
                             .foregroundColor(.red)
                     }
+                    
+                    HStack {
+                        Text("本年结余：")
+                            .font(.subheadline)
+                            .foregroundColor(.black)
+                        Text("¥267.00")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                    }
                 }
-                .padding()
-                Text("本年结余：¥267.00")
-                    .font(.subheadline)
-                    .foregroundColor(.green)
             }
             .padding()
             
             // Account assets
             VStack(alignment: .leading) {
-                Text("账户资产")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
                 HStack {
-                    Image(systemName: "appstore")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                    VStack(alignment: .leading) {
-                        Text("支付宝")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("余额：¥300.00")
-                            .font(.headline)
-                            .foregroundColor(.blue)
-                    }
+                    Text("账户资产").foregroundColor(.blue)
                 }
-                .padding()
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 10) // 设置左右边距
+                .overlay(
+                    HStack {
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Spacer()
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                    }
+                )
+                .padding(.vertical, 5) // 设置上下边距
+                
+                HStack{
+                    Text("支付宝")
+                        .font(.subheadline)
+                        .foregroundColor(.black)
+                    Spacer()
+                    Text("¥300.00")
+                        .font(.headline)
+                        .foregroundColor(.blue)
+                }
+                .padding(.horizontal,20)
             }
             .padding()
+            
+            Spacer()
+
         }
     }
 }
