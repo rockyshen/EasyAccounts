@@ -19,6 +19,7 @@
 		64DA4E5B2D524EA400EE1521 /* FlowList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E5A2D524EA400EE1521 /* FlowList.swift */; };
 		64DA4E5D2D524F4200EE1521 /* FlowStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E5C2D524F4200EE1521 /* FlowStore.swift */; };
 		64DA4E5F2D52512400EE1521 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E5E2D52512400EE1521 /* FlowView.swift */; };
+		64DA4E612D53150F00EE1521 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E602D53150F00EE1521 /* HomeStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		64DA4E5A2D524EA400EE1521 /* FlowList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowList.swift; sourceTree = "<group>"; };
 		64DA4E5C2D524F4200EE1521 /* FlowStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowStore.swift; sourceTree = "<group>"; };
 		64DA4E5E2D52512400EE1521 /* FlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowView.swift; sourceTree = "<group>"; };
+		64DA4E602D53150F00EE1521 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,7 +69,7 @@
 		64DA4E3E2D4E134900EE1521 /* EasyAccounts */ = {
 			isa = PBXGroup;
 			children = (
-				64DA4E572D4FB6E700EE1521 /* data */,
+				64DA4E572D4FB6E700EE1521 /* model */,
 				64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */,
 				64DA4E412D4E134900EE1521 /* ContentView.swift */,
 				64DA4E432D4E134B00EE1521 /* Assets.xcassets */,
@@ -90,13 +92,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		64DA4E572D4FB6E700EE1521 /* data */ = {
+		64DA4E572D4FB6E700EE1521 /* model */ = {
 			isa = PBXGroup;
 			children = (
 				64DA4E582D4FB6F800EE1521 /* Transaction.swift */,
 				64DA4E5C2D524F4200EE1521 /* FlowStore.swift */,
+				64DA4E602D53150F00EE1521 /* HomeStore.swift */,
 			);
-			path = data;
+			path = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +181,7 @@
 				64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */,
 				64DA4E5B2D524EA400EE1521 /* FlowList.swift in Sources */,
 				64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */,
+				64DA4E612D53150F00EE1521 /* HomeStore.swift in Sources */,
 				64DA4E542D4FB34600EE1521 /* ScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

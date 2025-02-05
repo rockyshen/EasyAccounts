@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct OverView: View {
+    var homeStore: HomeStore
+    
     var body: some View {
         VStack(alignment: .leading) {
             // Header
@@ -37,7 +39,7 @@ struct OverView: View {
                 Text("总资产")
                     .font(.footnote)
                     .foregroundColor(.gray)
-                Text("¥390.00")
+                Text("¥\(homeStore.homeDto!.totalAsset)")
                     .font(.largeTitle)
                     .foregroundColor(.black)
             }
@@ -64,7 +66,7 @@ struct OverView: View {
                         Text("本年总收入：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥300.00")
+                        Text("\(homeStore.homeDto!.yearIncome)")
                             .font(.headline)
                             .foregroundColor(.green)
                     }
@@ -73,7 +75,7 @@ struct OverView: View {
                         Text("本年总支出：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥33.00")
+                        Text("\(homeStore.homeDto!.yearOutCome)")
                             .font(.headline)
                             .foregroundColor(.red)
                     }
@@ -82,7 +84,7 @@ struct OverView: View {
                         Text("本年结余：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥267.00")
+                        Text("\(homeStore.homeDto!.yearBalance)")
                             .font(.headline)
                             .foregroundColor(.black)
                     }
@@ -106,16 +108,19 @@ struct OverView: View {
                 )
                 .padding(.vertical, 5) // 设置上下边距
                 
-                HStack{
-                    Text("支付宝")
-                        .font(.subheadline)
-                        .foregroundColor(.black)
-                    Spacer()
-                    Text("¥300.00")
-                        .font(.headline)
-                        .foregroundColor(.blue)
-                }
-                .padding(.horizontal,20)
+                List {
+                    ForEach(homeStore.homeDto!.accounts, id: \.id) { account in
+                        HStack {
+                            Text(account.accountName)
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Spacer()
+                            Text("¥\(account.accountAsset)")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }.listStyle(PlainListStyle())
             }
             .padding()
             
@@ -125,6 +130,7 @@ struct OverView: View {
     }
 }
 
-#Preview {
-    OverView()
-}
+
+//#Preview {
+//    OverView(homeStore: )   // 这里构造HomeStore太复杂了，就不在这里预览了！
+//}
