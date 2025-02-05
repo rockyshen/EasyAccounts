@@ -66,7 +66,7 @@ struct OverView: View {
                         Text("本年总收入：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("\(homeStore.homeDto!.yearIncome)")
+                        Text("¥\(homeStore.homeDto!.yearIncome)")
                             .font(.headline)
                             .foregroundColor(.green)
                     }
@@ -75,7 +75,7 @@ struct OverView: View {
                         Text("本年总支出：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("\(homeStore.homeDto!.yearOutCome)")
+                        Text("¥\(homeStore.homeDto!.yearOutCome)")
                             .font(.headline)
                             .foregroundColor(.red)
                     }
@@ -84,7 +84,7 @@ struct OverView: View {
                         Text("本年结余：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("\(homeStore.homeDto!.yearBalance)")
+                        Text("¥\(homeStore.homeDto!.yearBalance)")
                             .font(.headline)
                             .foregroundColor(.black)
                     }
