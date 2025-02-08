@@ -9,12 +9,10 @@ import SwiftUI
 
 @main
 struct EasyAccountsApp: App {
-    @StateObject var homeStore = HomeStore()
-    
     var body: some Scene {
         WindowGroup {
             TabView {
-                OverView(homeStore: homeStore)
+                OverView()
                     .tabItem { Label("总览", systemImage: "house") }
                 
                 DetailView()

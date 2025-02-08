@@ -10,23 +10,9 @@ import SwiftUI
 struct ScreenView: View {
     @State private var is备注筛选Toggled = false
     @State private var selectedTimePeriod = "当月"
-    
     @State private var selectedDateRange = "当月"
     
-//    struct Transaction {
-//        let id = UUID()
-//        let date: String
-//        let category: String
-//        let amount: String
-//        let type: String
-//    }
-//    
-//    let transactions = [
-//        Transaction(date: "2024-08-25", category: "生活/吃饭", amount: "-¥33.00", type: "支出"),
-//        Transaction(date: "2024-08-25", category: "工资/绩效", amount: "+¥3003.00", type: "收入")
-//    ]
-    
-    @State private var flowStore = FlowStore()
+    @StateObject var detailStore = DetailStore()
     
     var body: some View {
         VStack {
@@ -87,7 +73,7 @@ struct ScreenView: View {
                     }) {
                         HStack {
                             Image(systemName: range == self.selectedDateRange ? "checkmark.circle.fill" : "circle")
-                                .font(.title)
+                                .font(.title2)
                             Text(range)
                                 .foregroundColor(.black)
                         }
@@ -155,29 +141,7 @@ struct ScreenView: View {
                 )
                 .padding(.vertical, 10) // 设置上下边距
                 
-                FlowList(flowStore: flowStore)
-//                    ForEach(transactions, id: \.id) { transaction in
-//                        HStack {
-//                            Text(transaction.date)
-//                                .font(.subheadline)
-//                                .foregroundColor(.black)
-//                            Text(transaction.category)
-//                                .font(.subheadline)
-//                                .foregroundColor(.black)
-//                            Spacer()
-//                            Text(transaction.amount)
-//                                .font(.subheadline)
-//                                .foregroundColor(transaction.type == "支出" ? .red : .green)
-//                            Image(systemName: transaction.type == "支出" ? "minus.circle.fill" : "plus.circle.fill")
-//                                .foregroundColor(transaction.type == "支出" ? .red : .green)
-//                        }
-//                        Divider()
-//                            .background(Color.gray.opacity(0.5)) // 设置分割线颜色
-//                        .padding()
-////                        .background(Color.white)
-////                        .cornerRadius(8)
-////                        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
-//                    }
+                FlowList(flows: detailStore.flowListDto.flows)
             }
             .padding()
         }
@@ -186,6 +150,6 @@ struct ScreenView: View {
 
 
 
-#Preview {
-    ScreenView()
-}
+//#Preview {
+//    ScreenView()
+//}

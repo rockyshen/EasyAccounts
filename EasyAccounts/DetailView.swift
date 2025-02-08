@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct DetailView: View {
+    @StateObject var detailStore = DetailStore()
+    
     @State private var date = Date() // 默认日期为当前日期
     @State private var showingDatePicker = false
-    
-    @State private var flowStore = FlowStore()
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -147,13 +147,13 @@ struct DetailView: View {
                 )
                 .padding(.vertical, 10) // 设置上下边距
                     
-                FlowList(flowStore: flowStore)
+                FlowList(flows: detailStore.flowListDto.flows)
             }
         }
     }
 }
 
 
-#Preview {
-    DetailView()
-}
+//#Preview {
+//    DetailView()
+//}

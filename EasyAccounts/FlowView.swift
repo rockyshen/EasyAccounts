@@ -8,29 +8,29 @@
 import SwiftUI
 
 struct FlowView: View {
-    @Binding var flow: Flow
+    var flow: FlowListSingleDto
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(flow.date)
+            Text(flow.fdate)
                 .font(.subheadline)
                 .foregroundColor(.black)
             HStack{
-                Text(flow.category)
+                Text(flow.tname)
                     .font(.subheadline)
                     .foregroundColor(.black)
                 
                 Spacer()
                 
-                Text(flow.amount)
+                Text(flow.money)
                     .font(.subheadline)
-                    .foregroundColor(flow.type == "支出" ? .red : .green)
-                Image(systemName: flow.type == "支出" ? "minus.circle.fill" : "plus.circle.fill")
-                    .foregroundColor(flow.type == "支出" ? .red : .green)
+                    .foregroundColor(flow.hname == "支出" ? .red : .green)
+                Image(systemName: flow.hname == "支出" ? "minus.circle.fill" : "plus.circle.fill")
+                    .foregroundColor(flow.hname == "支出" ? .red : .green)
             }
             
             HStack {
-                Text(flow.method)
+                Text(flow.note)
                     .font(.footnote)
                     .foregroundColor(.gray)
             }
@@ -42,8 +42,8 @@ struct FlowView: View {
 //    let flow: Flow = Flow(date: "2024-08-25", category: "生活/吃饭", amount: "-¥33.00", type: "支出", method: "微信")
 //    FlowView(flow: flow)
 //}
-struct FlowView_Previews: PreviewProvider {
-    static var previews: some View {
-        FlowView(flow: .constant(Flow(date: "2024-08-25", category: "生活/吃饭", amount: "-¥33.00", type: "支出", method: "微信")))
-    }
-}
+//struct FlowView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FlowView(flow: .constant(Flow(date: "2024-08-25", category: "生活/吃饭", amount: "-¥33.00", type: "支出", method: "微信")))
+//    }
+//}

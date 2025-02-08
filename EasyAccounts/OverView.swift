@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OverView: View {
-    var homeStore: HomeStore
+    @StateObject var homeStore = HomeStore()
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -39,7 +39,7 @@ struct OverView: View {
                 Text("总资产")
                     .font(.footnote)
                     .foregroundColor(.gray)
-                Text("¥\(homeStore.homeDto!.totalAsset)")
+                Text("¥\(homeStore.homeDto.totalAsset)")
                     .font(.largeTitle)
                     .foregroundColor(.black)
             }
@@ -66,7 +66,7 @@ struct OverView: View {
                         Text("本年总收入：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥\(homeStore.homeDto!.yearIncome)")
+                        Text("¥\(homeStore.homeDto.yearIncome)")
                             .font(.headline)
                             .foregroundColor(.green)
                     }
@@ -75,7 +75,7 @@ struct OverView: View {
                         Text("本年总支出：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥\(homeStore.homeDto!.yearOutCome)")
+                        Text("¥\(homeStore.homeDto.yearOutCome)")
                             .font(.headline)
                             .foregroundColor(.red)
                     }
@@ -84,7 +84,7 @@ struct OverView: View {
                         Text("本年结余：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥\(homeStore.homeDto!.yearBalance)")
+                        Text("¥\(homeStore.homeDto.yearBalance)")
                             .font(.headline)
                             .foregroundColor(.black)
                     }
@@ -109,7 +109,7 @@ struct OverView: View {
                 .padding(.vertical, 5) // 设置上下边距
                 
                 List {
-                    ForEach(homeStore.homeDto!.accounts, id: \.id) { account in
+                    ForEach(homeStore.homeDto.accounts, id: \.id) { account in
                         HStack {
                             Text(account.accountName)
                                 .font(.subheadline)
