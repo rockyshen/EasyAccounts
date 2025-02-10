@@ -14,6 +14,16 @@ struct FlowList: View {
         List {
             ForEach(flows) {flow in
                 FlowView(flow: flow)
+                    .swipeActions(edge: .trailing){
+                        Button("删除",role: .destructive){
+                            // 实现删除这一条Flow的逻辑
+                        }
+                    }
+                    .swipeActions(edge: .leading){
+                        Button("编辑"){
+                            // 实现编辑修改这一条Flow的逻辑
+                        }.tint(.blue)
+                    }
             }
         }.listStyle(PlainListStyle())
     }
@@ -26,8 +36,8 @@ struct FlowList: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         FlowList(flows: [
-            FlowListSingleDto(id: 1, money: "100", exempt: false, collect: true, handle: 1, note: "Test note", toAName: "To A Name", aname: "A Name", tname: "T Name", hname: "H Name", fdate: "2022-05-01"),
-            FlowListSingleDto(id: 2, money: "200", exempt: true, collect: false, handle: 2, note: "Test note 2", toAName: nil, aname: "A Name 2", tname: "T Name 2", hname: "H Name 2", fdate: "2022-05-02")
+            FlowListSingleDto(id: 1, money: "100", exempt: false, collect: true, handle: 1, note: "Test note", toAName: "To A Name", aname: "A Name", tname: "T Name", hname: "收入", fdate: "2022-05-01"),
+            FlowListSingleDto(id: 2, money: "200", exempt: true, collect: false, handle: 2, note: "Test note 2", toAName: nil, aname: "A Name 2", tname: "T Name 2", hname: "支出", fdate: "2022-05-02")
         ])
         .previewLayout(.sizeThatFits)
     }
