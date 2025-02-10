@@ -21,7 +21,7 @@ struct FlowView: View {
                     .font(.subheadline)
                     .foregroundColor(.black)
                 
-                Text(flow.note)
+                Text(flow.aname)
                     .font(.footnote)
                     .foregroundColor(.gray)
             }
