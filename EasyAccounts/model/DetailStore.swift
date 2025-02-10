@@ -83,4 +83,9 @@ class DetailStore: ObservableObject {
             }
         }.resume()
     }
+    
+    func addFlow(flowAddRequestDto: FlowAddRequestDto){
+        // 发起后端请求，添加addFlow
+        print(flowAddRequestDto)
+    }
 }

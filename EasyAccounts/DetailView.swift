@@ -13,6 +13,8 @@ struct DetailView: View {
     
     @State private var date = Date() // 默认日期为当前日期
     @State private var showingDatePicker = false
+    @State private var isShowingAddFlowView: Bool = false
+    
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,14 +27,18 @@ struct DetailView: View {
                 HStack {
                     Button(action: {
                         // Add functionality for menu button
-                    }) {
+                        isShowingAddFlowView.toggle()
+                    }, label : {
                         Text("记一笔")
                             .font(.subheadline)
                             .foregroundColor(.white)
-                    }
+                    })
                     .padding()
                     .background(Color.blue)
                     .cornerRadius(8)
+                    .sheet(isPresented: $isShowingAddFlowView, content: {
+                        AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
+                    })
                 }
             }
             .padding()

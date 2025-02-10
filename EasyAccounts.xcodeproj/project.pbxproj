@@ -19,6 +19,7 @@
 		64DA4E5D2D524F4200EE1521 /* DetailStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E5C2D524F4200EE1521 /* DetailStore.swift */; };
 		64DA4E5F2D52512400EE1521 /* FlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E5E2D52512400EE1521 /* FlowView.swift */; };
 		64DA4E612D53150F00EE1521 /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E602D53150F00EE1521 /* HomeStore.swift */; };
+		64DA4E632D57A64400EE1521 /* AddFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E622D57A64400EE1521 /* AddFlowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		64DA4E5C2D524F4200EE1521 /* DetailStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStore.swift; sourceTree = "<group>"; };
 		64DA4E5E2D52512400EE1521 /* FlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowView.swift; sourceTree = "<group>"; };
 		64DA4E602D53150F00EE1521 /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		64DA4E622D57A64400EE1521 /* AddFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFlowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				64DA4E552D4FB38900EE1521 /* SettingView.swift */,
 				64DA4E5A2D524EA400EE1521 /* FlowList.swift */,
 				64DA4E5E2D52512400EE1521 /* FlowView.swift */,
+				64DA4E622D57A64400EE1521 /* AddFlowView.swift */,
 			);
 			path = EasyAccounts;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				64DA4E522D4FB14900EE1521 /* DetailView.swift in Sources */,
 				64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */,
 				64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */,
+				64DA4E632D57A64400EE1521 /* AddFlowView.swift in Sources */,
 				64DA4E5B2D524EA400EE1521 /* FlowList.swift in Sources */,
 				64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */,
 				64DA4E612D53150F00EE1521 /* HomeStore.swift in Sources */,
