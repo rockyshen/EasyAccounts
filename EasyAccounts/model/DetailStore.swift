@@ -45,8 +45,27 @@ struct FlowTypeDto: Codable {
     var children: [FlowTypeDto]
 }
 
+// addFlow时，请求体
+struct FlowAddRequestDto: Codable {
+    var money: String      // 账单金额
+    var fDate: String      // 账单日期（手动选择）
+    var createDate: String  // 系统生成的日期
+    var actionId: Int       // 收入 or 支出
+    var accountId: Int      // 账户的id
+    var accountToId: Int    // 转账情况下，去哪个的账单id
+    var typeId: Int         // 账单分类
+    var isCollect: Bool     // 是否收藏
+    var note: String        // 备注
+}
+
 class DetailStore: ObservableObject {
-    @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: [])
+    @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: []){
+        didSet {
+            // 属性flowListDto一有更新，就刷新界面
+            // TODO 这里必须优化！否则就是不断给后端发请求！
+            loadData()
+        }
+    }
     
     init() {
         loadData()
@@ -84,8 +103,42 @@ class DetailStore: ObservableObject {
         }.resume()
     }
     
+    // 增：添加一条流水记录
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
-        // 发起后端请求，添加addFlow
-        print(flowAddRequestDto)
+//        print(flowAddRequestDto)
+        if let url = URL(string: "http://localhost:8085/flow/addFlow") {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            // 将 flowAddRequestDto 转换为 JSON 数据
+            do {
+                let jsonData = try JSONEncoder().encode(flowAddRequestDto)
+                request.httpBody = jsonData
+            } catch {
+                print("Error encoding flowAddRequestDto: \(error)")
+                return
+            }
+            
+            // 发起POST请求
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let data = data {
+                    if let responseString = String(data: data, encoding: .utf8) {
+                        print("Response: \(responseString)")
+                    }
+                } else if let error = error {
+                    print("Error making POST request: \(error)")
+                }
+            }.resume()
+        } else {
+            print("Invalid URL")
+        }
+        
     }
+    
+    // 删：删除一条流水记录
+    func delete(){}
+    
+    // 改：修改一条流水记录
+    func update(){}
 }

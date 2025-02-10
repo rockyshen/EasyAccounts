@@ -7,20 +7,9 @@
 
 import SwiftUI
 
-struct FlowAddRequestDto {
-    var money: String      // 账单金额
-    var fDate: String      // 账单日期（手动选择）
-    var createDate: String  // 系统生成的日期
-    var actionId: Int       // 收入 or 支出
-    var accountId: Int      // 账户的id
-    var accountToId: Int    // 转账情况下，去哪个的账单id
-    var typeId: Int         // 账单分类
-    var isCollect: Bool     // 是否收藏
-    var note: String        // 备注
-}
-
 struct AddFlowView: View {
-    @State var flowAddRequestDto: FlowAddRequestDto = .init(money: "", fDate: "", createDate: "", actionId: 0, accountId: 0, accountToId: 0, typeId: 0, isCollect: false, note: "")
+    // 可以设置默认值
+    @State var flowAddRequestDto: FlowAddRequestDto = .init(money: "", fDate: "", createDate: "", actionId: 16, accountId: 47, accountToId: 0, typeId: 93, isCollect: false, note: "")
     
     @Environment(\.dismiss) private var dismiss
     
@@ -40,16 +29,16 @@ struct AddFlowView: View {
             Form {
                 HStack {
                     Text("账单金额")
+                        .padding(.trailing, 20)
                     TextField("请输入金额", text: $flowAddRequestDto.money)
                         .keyboardType(.decimalPad)
                         .textInputAutocapitalization(.none)
-//                        .padding()
                         .background(Color.white)
                         .cornerRadius(8)
                 }
                 
                 // TODO 查询到所有收支类型！
-                Picker("选择收支", selection: $flowAddRequestDto.typeId) {
+                Picker("选择收支", selection: $flowAddRequestDto.actionId) {
                     Text("收入").tag(15)
                     Text("支出").tag(16)
                     Text("内部转账").tag(17)
@@ -64,17 +53,15 @@ struct AddFlowView: View {
                 .pickerStyle(DefaultPickerStyle())
                 
                 // TODO 查询到所有账单分类
-                Picker("账单分类", selection: $flowAddRequestDto.actionId) {
+                Picker("账单分类", selection: $flowAddRequestDto.typeId) {
                     Text("购物").tag(93)
-//                    Text("交通").tag(94)
                 }
                 .pickerStyle(DefaultPickerStyle())
                 
-//                DatePicker("账单日期", selection: $selectedDate, displayedComponents: .date)
                 
-                // 使用 DatePicker 控件选择日期
                 DatePicker("账单日期", selection: $selectedDate, displayedComponents: .date)
                     .onChange(of: selectedDate) { newDate, _ in
+                        selectedDate = newDate
                         flowAddRequestDto.fDate = dateFormatter.string(from: newDate)
                     }
                 

@@ -37,7 +37,12 @@ struct HomeAccountBean: Codable {
 class HomeStore: ObservableObject {
     // Published注解，必须声明为实例对象
     // TODO 如何把load的数据设置到这里！
-    @Published var homeDto = HomeDto(accounts: [], curIncome: nil, curOutCome: nil, netAsset: "", totalAsset: "", yearBalance: "", yearIncome: "", yearOutCome: "")
+    @Published var homeDto = HomeDto(accounts: [], curIncome: nil, curOutCome: nil, netAsset: "", totalAsset: "", yearBalance: "", yearIncome: "", yearOutCome: ""){
+        didSet {
+            // homeDto一有更新，就刷新界面
+            loadData()
+        }
+    }
     
     init() {
         loadData()
