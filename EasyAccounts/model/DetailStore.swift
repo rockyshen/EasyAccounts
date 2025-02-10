@@ -31,9 +31,9 @@ struct FlowListSingleDto: Codable,Identifiable {
     var handle: Int
     var note: String
     var toAName: String?
-    var aname: String      // 注意，Java中的实体类是aName，但是JSON返回时是：aname，以JSON为准，否则解析失败！
-    var tname: String
-    var hname: String
+    var aname: String      // Account名 注意，Java中的实体类是aName，但是JSON返回时是：aname，以JSON为准，否则解析失败！
+    var tname: String     // Type名
+    var hname: String     // Action名
     var fdate: String
 }
 
@@ -59,13 +59,7 @@ struct FlowAddRequestDto: Codable {
 }
 
 class DetailStore: ObservableObject {
-    @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: []){
-        didSet {
-            // 属性flowListDto一有更新，就刷新界面
-            // TODO 这里必须优化！否则就是不断给后端发请求！
-            loadData()
-        }
-    }
+    @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: [])
     
     init() {
         loadData()
@@ -95,8 +89,7 @@ class DetailStore: ObservableObject {
 //                print("Error decoding JSON data: \(error)")
 //            }
             
-            // TODO 不允许用副线程修改 Published 的属性，但是开了，数据获取不到，都是nil
-            // 先这样，完成比完美更重要
+            // 被Published修饰的属性，必须在主线程上更新
             DispatchQueue.main.async {
                 self.flowListDto = baseDto.data
             }
@@ -105,7 +98,6 @@ class DetailStore: ObservableObject {
     
     // 增：添加一条流水记录
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
-//        print(flowAddRequestDto)
         if let url = URL(string: "http://localhost:8085/flow/addFlow") {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -126,6 +118,8 @@ class DetailStore: ObservableObject {
                     if let responseString = String(data: data, encoding: .utf8) {
                         print("Response: \(responseString)")
                     }
+                    // TODO 向Published对外发布的属性flowListDto的flows追加这次新增的flow对象，确保其他页面能第一时间更新
+                    
                 } else if let error = error {
                     print("Error making POST request: \(error)")
                 }

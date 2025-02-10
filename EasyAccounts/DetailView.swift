@@ -104,7 +104,6 @@ struct DetailView: View {
                         
                         Spacer()
                         
-                        // TODO 加入日期选择器之后，三行高度不一致
                         DatePicker(
                             selection: $date,
                             displayedComponents: [.date],

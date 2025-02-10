@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddFlowView: View {
-    // 可以设置默认值
+    // 属性已经设置默认值了，就不用实例化时传递了
     @State var flowAddRequestDto: FlowAddRequestDto = .init(money: "", fDate: "", createDate: "", actionId: 16, accountId: 47, accountToId: 0, typeId: 93, isCollect: false, note: "")
     
     @Environment(\.dismiss) private var dismiss
@@ -24,6 +24,9 @@ struct AddFlowView: View {
     
     let completion: (FlowAddRequestDto) -> Void
     
+    @StateObject var actionStore = ActionStore()
+    @StateObject var accountStore = AccountStore()
+    
     var body: some View {
         NavigationView {
             Form {
@@ -37,18 +40,17 @@ struct AddFlowView: View {
                         .cornerRadius(8)
                 }
                 
-                // TODO 查询到所有收支类型！
                 Picker("选择收支", selection: $flowAddRequestDto.actionId) {
-                    Text("收入").tag(15)
-                    Text("支出").tag(16)
-                    Text("内部转账").tag(17)
+                    ForEach(actionStore.actions, id: \.id) { action in
+                        Text(action.hName).tag(action.id)
+                    }
                 }
                 .pickerStyle(DefaultPickerStyle())
                 
-                // TODO 查询到所有账户！
                 Picker("选择账户", selection: $flowAddRequestDto.accountId) {
-                    Text("测试银行").tag(47)
-                    Text("vuebank").tag(48)
+                    ForEach(accountStore.accountResponseDtoList, id: \.id) { account in
+                        Text(account.name).tag(account.id)
+                    }
                 }
                 .pickerStyle(DefaultPickerStyle())
                 
