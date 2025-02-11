@@ -30,7 +30,7 @@ struct TypeSingleDto: Identifiable, Codable {
     var id: Int?           // 当新增一个分类时，id可能为空，由数据库自增
     var tname: String
     var parent = -1
-    var disable = false
+    var disable = false    // 逻辑删除 标记位
     var archive: Bool
     var actionId: Int?
 }
@@ -147,6 +147,55 @@ class TypeStore: ObservableObject {
                let data = data {
                 do {
                     let jsonResponse = try JSONDecoder().decode(TypeSingleDto.self, from: data)
+                    print("JSON: \(jsonResponse)")
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    // 删除一个Type,基于id
+    // 注意：是DELETE请求 http://localhost:8085/type/deleteType/{id}
+    func deleteType(typeSingleDto: TypeSingleDto){
+        guard let url = URL(string: "http://localhost:8085/type/deleteType/\(typeSingleDto.id!)") else {
+                print("Invalid URL")
+                return
+            }
+        
+        print(url)
+        
+        print(typeSingleDto)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+        do {
+            let jsonData = try JSONEncoder().encode(typeSingleDto)
+            request.httpBody = jsonData
+        } catch {
+            print("Error encoding JSON: \(error)")
+            return
+        }
+            
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error with request: \(error)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Server error")
+                return
+            }
+            
+            if let mimeType = response?.mimeType, mimeType == "application/json",
+               let data = data {
+                do {
+                    let jsonResponse = try JSONDecoder().decode(TypeResponse.self, from: data)
                     print("JSON: \(jsonResponse)")
                 } catch {
                     print("Error parsing JSON: \(error)")

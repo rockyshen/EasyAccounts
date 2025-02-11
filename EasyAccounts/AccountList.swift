@@ -14,6 +14,9 @@ struct AccountList: View {
     
     @StateObject var accountStore = AccountStore()
     
+    @State private var showingDeleteAlert = false
+    @State private var selectedAccount: AccountResponseDto?
+    
     var body: some View {
         List {
             ForEach(accounts) {account in
@@ -21,6 +24,8 @@ struct AccountList: View {
                     .swipeActions(edge: .trailing){
                         Button("删除",role: .destructive){
                             // 实现删除这一条Flow的逻辑
+                            showingDeleteAlert.toggle()
+                            selectedAccount = account
                         }
                     }
                     .swipeActions(edge: .leading){
@@ -40,6 +45,19 @@ struct AccountList: View {
                 }
             )
         })
+        .alert(isPresented: $showingDeleteAlert) {
+            Alert(
+                title: Text("确认删除"),
+                message: Text("您确定要删除这个账户吗？"),
+                primaryButton: .destructive(Text("删除")) {
+                    accountStore.deleteAccount(account: selectedAccount!)
+                    showingDeleteAlert = false
+                },
+                secondaryButton: .cancel() {
+                    showingDeleteAlert = false
+                }
+            )
+        }
     }
 }
 

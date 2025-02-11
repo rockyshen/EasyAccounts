@@ -103,7 +103,7 @@ class AccountStore: ObservableObject {
     }
     
     // 增加一个新账户
-    // http://localhost:8085/account//addAccount
+    // http://localhost:8085/account/addAccount
     func addAccount(account: AccountResponseDto){
         let url = URL(string: "http://localhost:8085/account/addAccount")!
             
@@ -143,6 +143,53 @@ class AccountStore: ObservableObject {
         }
         task.resume()
         
+    }
+    
+    // 删除一个账户
+    // http://localhost:8085/account/deleteAccount/{id}
+    func deleteAccount(account: AccountResponseDto) {
+        guard let url = URL(string: "http://localhost:8085/account/deleteAccount/\(account.id!)") else {
+                print("Invalid URL")
+                return
+            }
+        
+        print(url)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+        do {
+            let jsonData = try JSONEncoder().encode(account)
+            request.httpBody = jsonData
+        } catch {
+            print("Error encoding JSON: \(error)")
+            return
+        }
+            
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error with request: \(error)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Server error")
+                return
+            }
+            
+            if let mimeType = response?.mimeType, mimeType == "application/json",
+               let data = data {
+                do {
+                    let jsonResponse = try JSONDecoder().decode(TypeResponse.self, from: data)
+                    print("JSON: \(jsonResponse)")
+                } catch {
+                    print("Error parsing JSON: \(error)")
+                }
+            }
+        }
+        task.resume()
     }
     
 }

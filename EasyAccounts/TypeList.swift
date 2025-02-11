@@ -14,6 +14,10 @@ struct TypeList: View {
     
     @StateObject var typeStore = TypeStore()
     
+    // 待删除的Type
+    @State private var showingDeleteAlert = false
+    @State private var selectedType: TypeSingleDto?
+    
     var body: some View {
         List {
             ForEach(typeList) {type in
@@ -21,6 +25,10 @@ struct TypeList: View {
                     .swipeActions(edge: .trailing){
                         Button("删除",role: .destructive){
                             // 实现删除这一条Type的逻辑
+                            // 必须弹窗确认
+                            // 将typeListResponseDto 转为 typeSingleDto
+                            showingDeleteAlert.toggle()
+                            selectedType = TypeSingleDto(id: type.id, tname: type.tname, archive: type.archive, actionId: type.action?.id)
                         }
                     }
                     .swipeActions(edge: .leading){
@@ -42,6 +50,20 @@ struct TypeList: View {
                 }
             )
         })
+        .alert(isPresented: $showingDeleteAlert) {
+            Alert(
+                title: Text("确认删除"),
+                message: Text("您确定要删除这个账户吗？"),
+                primaryButton: .destructive(Text("删除")) {
+                    typeStore.deleteType(typeSingleDto: selectedType!)
+                    showingDeleteAlert = false
+                },
+                secondaryButton: .cancel() {
+                    showingDeleteAlert = false
+                }
+            )
+        }
+        
     }
 }
 
