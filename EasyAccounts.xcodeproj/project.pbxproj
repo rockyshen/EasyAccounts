@@ -7,13 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		64373EE92D59F3A3007072DC /* EditActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EE82D59F3A3007072DC /* EditActionView.swift */; };
-		64373EEB2D59F3CE007072DC /* EditAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEA2D59F3CE007072DC /* EditAccountView.swift */; };
-		64373EED2D59F3EE007072DC /* EditTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEC2D59F3EE007072DC /* EditTypeView.swift */; };
+		64373EE92D59F3A3007072DC /* SettingActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EE82D59F3A3007072DC /* SettingActionView.swift */; };
+		64373EEB2D59F3CE007072DC /* SettingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEA2D59F3CE007072DC /* SettingAccountView.swift */; };
+		64373EED2D59F3EE007072DC /* SettingTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEC2D59F3EE007072DC /* SettingTypeView.swift */; };
 		64373EEF2D59F9AA007072DC /* ActionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEE2D59F9AA007072DC /* ActionStore.swift */; };
 		64373EF12D59FE95007072DC /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EF02D59FE95007072DC /* AccountStore.swift */; };
 		64373EF32D5A48E6007072DC /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EF22D5A48E6007072DC /* AccountView.swift */; };
 		64373EF52D5A48FA007072DC /* AccountList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EF42D5A48FA007072DC /* AccountList.swift */; };
+		64373EF72D5AE01D007072DC /* TypeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EF62D5AE01D007072DC /* TypeStore.swift */; };
+		64373EF92D5AE4E2007072DC /* TypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EF82D5AE4E2007072DC /* TypeView.swift */; };
+		64373EFB2D5AE5A0007072DC /* TypeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFA2D5AE5A0007072DC /* TypeList.swift */; };
+		64373EFE2D5AF1F1007072DC /* AccountEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFD2D5AF1F1007072DC /* AccountEditView.swift */; };
+		64373F002D5AF22A007072DC /* TypeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFF2D5AF22A007072DC /* TypeEditView.swift */; };
 		64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */; };
 		64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E412D4E134900EE1521 /* ContentView.swift */; };
 		64DA4E442D4E134B00EE1521 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64DA4E432D4E134B00EE1521 /* Assets.xcassets */; };
@@ -30,13 +35,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		64373EE82D59F3A3007072DC /* EditActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditActionView.swift; sourceTree = "<group>"; };
-		64373EEA2D59F3CE007072DC /* EditAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAccountView.swift; sourceTree = "<group>"; };
-		64373EEC2D59F3EE007072DC /* EditTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTypeView.swift; sourceTree = "<group>"; };
+		64373EE82D59F3A3007072DC /* SettingActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingActionView.swift; sourceTree = "<group>"; };
+		64373EEA2D59F3CE007072DC /* SettingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAccountView.swift; sourceTree = "<group>"; };
+		64373EEC2D59F3EE007072DC /* SettingTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTypeView.swift; sourceTree = "<group>"; };
 		64373EEE2D59F9AA007072DC /* ActionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionStore.swift; sourceTree = "<group>"; };
 		64373EF02D59FE95007072DC /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		64373EF22D5A48E6007072DC /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		64373EF42D5A48FA007072DC /* AccountList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountList.swift; sourceTree = "<group>"; };
+		64373EF62D5AE01D007072DC /* TypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeStore.swift; sourceTree = "<group>"; };
+		64373EF82D5AE4E2007072DC /* TypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeView.swift; sourceTree = "<group>"; };
+		64373EFA2D5AE5A0007072DC /* TypeList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeList.swift; sourceTree = "<group>"; };
+		64373EFD2D5AF1F1007072DC /* AccountEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEditView.swift; sourceTree = "<group>"; };
+		64373EFF2D5AF22A007072DC /* TypeEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeEditView.swift; sourceTree = "<group>"; };
 		64DA4E3C2D4E134900EE1521 /* EasyAccounts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EasyAccounts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EasyAccountsApp.swift; sourceTree = "<group>"; };
 		64DA4E412D4E134900EE1521 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -67,11 +77,20 @@
 		64373EE72D59F36E007072DC /* setting */ = {
 			isa = PBXGroup;
 			children = (
-				64373EE82D59F3A3007072DC /* EditActionView.swift */,
-				64373EEA2D59F3CE007072DC /* EditAccountView.swift */,
-				64373EEC2D59F3EE007072DC /* EditTypeView.swift */,
+				64373EE82D59F3A3007072DC /* SettingActionView.swift */,
+				64373EEA2D59F3CE007072DC /* SettingAccountView.swift */,
+				64373EEC2D59F3EE007072DC /* SettingTypeView.swift */,
 			);
 			path = setting;
+			sourceTree = "<group>";
+		};
+		64373EFC2D5AF1D6007072DC /* edit */ = {
+			isa = PBXGroup;
+			children = (
+				64373EFD2D5AF1F1007072DC /* AccountEditView.swift */,
+				64373EFF2D5AF22A007072DC /* TypeEditView.swift */,
+			);
+			path = edit;
 			sourceTree = "<group>";
 		};
 		64DA4E332D4E134900EE1521 = {
@@ -93,6 +112,7 @@
 		64DA4E3E2D4E134900EE1521 /* EasyAccounts */ = {
 			isa = PBXGroup;
 			children = (
+				64373EFC2D5AF1D6007072DC /* edit */,
 				64373EE72D59F36E007072DC /* setting */,
 				64DA4E572D4FB6E700EE1521 /* model */,
 				64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */,
@@ -108,6 +128,8 @@
 				64DA4E622D57A64400EE1521 /* AddFlowView.swift */,
 				64373EF22D5A48E6007072DC /* AccountView.swift */,
 				64373EF42D5A48FA007072DC /* AccountList.swift */,
+				64373EF82D5AE4E2007072DC /* TypeView.swift */,
+				64373EFA2D5AE5A0007072DC /* TypeList.swift */,
 			);
 			path = EasyAccounts;
 			sourceTree = "<group>";
@@ -127,6 +149,7 @@
 				64DA4E602D53150F00EE1521 /* HomeStore.swift */,
 				64373EEE2D59F9AA007072DC /* ActionStore.swift */,
 				64373EF02D59FE95007072DC /* AccountStore.swift */,
+				64373EF62D5AE01D007072DC /* TypeStore.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -201,21 +224,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64373EFB2D5AE5A0007072DC /* TypeList.swift in Sources */,
 				64DA4E502D4FABB700EE1521 /* OverView.swift in Sources */,
 				64DA4E5F2D52512400EE1521 /* FlowView.swift in Sources */,
 				64373EEF2D59F9AA007072DC /* ActionStore.swift in Sources */,
 				64373EF32D5A48E6007072DC /* AccountView.swift in Sources */,
-				64373EE92D59F3A3007072DC /* EditActionView.swift in Sources */,
+				64373EE92D59F3A3007072DC /* SettingActionView.swift in Sources */,
 				64DA4E5D2D524F4200EE1521 /* DetailStore.swift in Sources */,
 				64DA4E522D4FB14900EE1521 /* DetailView.swift in Sources */,
 				64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */,
 				64373EF12D59FE95007072DC /* AccountStore.swift in Sources */,
-				64373EED2D59F3EE007072DC /* EditTypeView.swift in Sources */,
-				64373EEB2D59F3CE007072DC /* EditAccountView.swift in Sources */,
+				64373EED2D59F3EE007072DC /* SettingTypeView.swift in Sources */,
+				64373EF92D5AE4E2007072DC /* TypeView.swift in Sources */,
+				64373EEB2D59F3CE007072DC /* SettingAccountView.swift in Sources */,
 				64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */,
 				64DA4E632D57A64400EE1521 /* AddFlowView.swift in Sources */,
 				64DA4E5B2D524EA400EE1521 /* FlowList.swift in Sources */,
+				64373F002D5AF22A007072DC /* TypeEditView.swift in Sources */,
+				64373EFE2D5AF1F1007072DC /* AccountEditView.swift in Sources */,
 				64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */,
+				64373EF72D5AE01D007072DC /* TypeStore.swift in Sources */,
 				64DA4E612D53150F00EE1521 /* HomeStore.swift in Sources */,
 				64DA4E542D4FB34600EE1521 /* ScreenView.swift in Sources */,
 				64373EF52D5A48FA007072DC /* AccountList.swift in Sources */,

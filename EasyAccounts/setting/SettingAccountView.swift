@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct EditAccountView: View {
+struct SettingAccountView: View {
     @StateObject var accountStore = AccountStore()
+    
+    @State var addNewAccount: AccountResponseDto?
     
     var body: some View {
         NavigationView {
@@ -19,15 +21,26 @@ struct EditAccountView: View {
             .toolbar {
                 Button(action: {
                     // 添加账户的操作
+                    addNewAccount = AccountResponseDto(id: nil, name: "", money: "", exemptMoney: "", card: "", note: "")
                 }) {
                     Text("添加账户")
                 }
             }
+            // 添加账户
+            .sheet(item: $addNewAccount, content: { account in
+                AccountEditView(
+                    account: account,
+                    completion: { newAccount in
+//                        print(newAccount)
+                         accountStore.addAccount(account: newAccount)
+                    }
+                )
+            })
 
         }
     }
 }
 
 #Preview {
-    EditAccountView()
+    SettingAccountView()
 }

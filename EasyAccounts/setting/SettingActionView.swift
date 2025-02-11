@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct EditActionView: View {
+struct SettingActionView: View {
     @StateObject var actionStore = ActionStore()
     
     var body: some View {
@@ -54,5 +54,5 @@ struct EditActionView: View {
 }
 
 #Preview {
-    EditActionView()
+    SettingActionView()
 }

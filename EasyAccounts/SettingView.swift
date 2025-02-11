@@ -12,13 +12,13 @@ struct SettingView: View {
         NavigationView {
             List {
                 Section(header: Text("设置")) {
-                    NavigationLink(destination: EditActionView()) {
+                    NavigationLink(destination: SettingActionView()) {
                         Label("收支", systemImage: "arrow.left.arrow.right")
                     }
-                    NavigationLink(destination: EditAccountView()) {
+                    NavigationLink(destination: SettingAccountView()) {
                         Label("账户", systemImage: "creditcard")
                     }
-                    NavigationLink(destination: EditTypeView()) {
+                    NavigationLink(destination: SettingTypeView()) {
                         Label("分类", systemImage: "list.dash")
                     }
                     NavigationLink(destination: AnyView(Text("快记模板"))) {

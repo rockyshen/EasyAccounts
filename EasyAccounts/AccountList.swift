@@ -10,6 +10,10 @@ import SwiftUI
 struct AccountList: View {
     var accounts: [AccountResponseDto]
     
+    @State var editingAccount: AccountResponseDto?
+    
+    @StateObject var accountStore = AccountStore()
+    
     var body: some View {
         List {
             ForEach(accounts) {account in
@@ -22,10 +26,20 @@ struct AccountList: View {
                     .swipeActions(edge: .leading){
                         Button("编辑"){
                             // 实现编辑修改这一条Flow的逻辑
+                            editingAccount = account
                         }.tint(.blue)
                     }
             }
-        }.listStyle(PlainListStyle())
+        }
+        .listStyle(PlainListStyle())
+        .sheet(item: $editingAccount, content: {account in
+            AccountEditView(
+                account: account,
+                completion: { newAccount in
+                    accountStore.updateAccount(account: newAccount)
+                }
+            )
+        })
     }
 }
 

@@ -26,6 +26,7 @@ struct AddFlowView: View {
     
     @StateObject var actionStore = ActionStore()
     @StateObject var accountStore = AccountStore()
+    @StateObject var typeStore = TypeStore()
     
     var body: some View {
         NavigationView {
@@ -54,9 +55,10 @@ struct AddFlowView: View {
                 }
                 .pickerStyle(DefaultPickerStyle())
                 
-                // TODO 查询到所有账单分类
                 Picker("账单分类", selection: $flowAddRequestDto.typeId) {
-                    Text("购物").tag(93)
+                    ForEach(typeStore.typeListResponseDtoList, id: \.id) { type in
+                        Text(type.tname).tag(type.id)
+                    }
                 }
                 .pickerStyle(DefaultPickerStyle())
                 
@@ -70,7 +72,7 @@ struct AddFlowView: View {
                 Toggle("是否收藏", isOn: $flowAddRequestDto.isCollect)
                 
                 HStack{
-                    Text("备注")
+                    Text("备注").padding(.trailing, 30)
                     TextField("备注", text: $flowAddRequestDto.note)
                         .textInputAutocapitalization(.none)
                         .padding()
