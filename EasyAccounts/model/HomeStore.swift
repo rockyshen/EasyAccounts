@@ -33,7 +33,6 @@ struct HomeAccountBean: Codable {
     let percent: String
 }
 
-//@Observable
 class HomeStore: ObservableObject {
     // Published注解，必须声明为实例对象
     @Published var homeDto = HomeDto(accounts: [], curIncome: nil, curOutCome: nil, netAsset: "", totalAsset: "", yearBalance: "", yearIncome: "", yearOutCome: "")

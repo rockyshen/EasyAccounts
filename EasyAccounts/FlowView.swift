@@ -21,7 +21,7 @@ struct FlowView: View {
                     .font(.subheadline)
                     .foregroundColor(.black)
                 
-                Text(flow.aname)
+                Text(shortenText(flow.note, to: 20))
                     .font(.footnote)
                     .foregroundColor(.gray)
             }
@@ -49,6 +49,14 @@ struct FlowView: View {
             
         }
     }
+    
+    func shortenText(_ text: String, to length: Int) -> String {
+        if text.count > length {
+            let index = text.index(text.startIndex, offsetBy: length)
+            return text[..<index] + "..." // 截断并追加省略号
+        }
+        return text
+    }
 }
 
 
@@ -59,7 +67,7 @@ struct FlowView_Previews: PreviewProvider {
                                          exempt: false,
                                          collect: true,
                                          handle: 1,
-                                         note: "备注",
+                                         note: "备注123456789123456",
                                          toAName: "Sample ToAName",
                                          aname: "Sample AName",
                                          tname: "购物",

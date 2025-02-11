@@ -41,8 +41,6 @@ struct TypeEditView: View {
                 .padding(.vertical,8)
             }
             .navigationTitle("编辑分类")
-            
-            // TODO Done完成按钮
             .safeAreaInset(edge: .bottom) {
                 Button(action: {
                     // 完成按钮的具体逻辑

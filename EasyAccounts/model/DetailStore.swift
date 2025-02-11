@@ -79,16 +79,7 @@ class DetailStore: ObservableObject {
                     print("Unable to decode JSON data")
                     return
             }
-            
-//            do {
-//                let baseDto = try JSONDecoder().decode(GetFlowListMainResponse.self, from: data)
-//                // 解码成功
-//                self?.FlowListDto = baseDto.data
-//                print(baseDto.data)
-//            } catch {
-//                print("Error decoding JSON data: \(error)")
-//            }
-            
+                        
             // 被Published修饰的属性，必须在主线程上更新
             DispatchQueue.main.async {
                 self.flowListDto = baseDto.data
@@ -130,9 +121,9 @@ class DetailStore: ObservableObject {
         
     }
     
-    // 删：删除一条流水记录
+    // TODO 删：删除一条流水记录
     func delete(){}
     
-    // 改：修改一条流水记录
+    // TODO 改：修改一条流水记录
     func update(){}
 }
