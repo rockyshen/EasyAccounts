@@ -41,6 +41,7 @@ class HomeStore: ObservableObject {
         loadData()
     }
     
+    // 加载“总览页”数据
     func loadData() {
         let url = URL(string: "http://localhost:8085/home/getHomeInfo")!
         

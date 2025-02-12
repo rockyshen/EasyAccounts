@@ -61,13 +61,39 @@ struct FlowAddRequestDto: Codable {
 class DetailStore: ObservableObject {
     @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: [])
     
+    var yearAndMonth: String{
+        didSet { loadData() }
+    }
+    
     init() {
+        // 获取当前日期
+        let currentDate = Date()
+        // 创建 DateFormatter 并设置格式为 "yyyy-MM"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM"
+        // 格式化当前日期
+        self.yearAndMonth = dateFormatter.string(from: currentDate)
+        
         loadData()
     }
     
+    func updateYearAndMonth(selectDate: Date) {
+        // 更新属性：yearAndMonth
+        // Int转String
+        print("Year updated to: \(selectDate)")
+        let calendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM"
+        let strYearAndMonth = dateFormatter.string(from: selectDate)
+
+        print(strYearAndMonth)
+        
+        self.yearAndMonth = dateFormatter.string(from: selectDate)
+    }
+    
     func loadData() {
-        // TODO 此处需要通过变量拼接URL
-        let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/2025-02")!
+        // 此处需要通过变量拼接URL 2025-01
+        let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {

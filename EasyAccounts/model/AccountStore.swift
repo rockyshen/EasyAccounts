@@ -203,6 +203,10 @@ class AccountStore: ObservableObject {
             DispatchQueue.main.async {
                 // 在成功新增之后，更新本地数据
                 self.accountResponseDtoList.removeAll { $0.id == account.id }
+                
+                // 删除账户之后，同步触发更新HomeStore更新“总览页”
+                print("我在AccountStore中调用了HomeStore的loadData方法")
+                
             }
         }
         task.resume()

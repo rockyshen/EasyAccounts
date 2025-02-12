@@ -45,5 +45,5 @@ struct SettingTypeView: View {
 }
 
 #Preview {
-    SettingTypeView()
+    SettingTypeView(typeStore: TypeStore())
 }

@@ -108,6 +108,7 @@ struct OverView: View {
                 )
                 .padding(.vertical, 5) // 设置上下边距
                 
+                // TODO 设置页-账户 如果更新了，这里应该同步刷新！
                 List {
                     ForEach(homeStore.homeDto.accounts, id: \.id) { account in
                         HStack {
@@ -131,6 +132,6 @@ struct OverView: View {
 }
 
 
-//#Preview {
-//    OverView(homeStore: )   // 这里构造HomeStore太复杂了，就不在这里预览了！
-//}
+#Preview {
+    OverView(homeStore: HomeStore())   // 这里构造HomeStore太复杂了，就不在这里预览了！
+}

@@ -15,10 +15,23 @@ struct DetailView: View {
     @State private var showingDatePicker = false
     @State private var isShowingAddFlowView: Bool = false
     
+//    @State var year: Int = 2025 {
+//        // 向DetailStore传递2025-02，拼接URL
+//        didSet { detailStore.updateYear(year) }
+//    }
+//    @State var month: Int = 02 {
+//        didSet { detailStore.updateMonth(month) }
+//    }
+    
+    @State private var selectedDate = Date(){
+        didSet { detailStore.updateYearAndMonth(selectDate: selectedDate) }
+    }
+    @State private var monthOffset = 0
+    
     
     var body: some View {
         VStack(alignment: .leading) {
-            // Header
+            // 顶部
             HStack {
                 Text("流水")
                     .font(.largeTitle)
@@ -44,6 +57,7 @@ struct DetailView: View {
             .padding()
             .background(Color.blue)
             
+            // 总览 - 按时间排序
             HStack {
                 Button(action: {
                     // 总览按钮的功能
@@ -56,7 +70,7 @@ struct DetailView: View {
                         .font(.footnote)
                         .opacity(0.5)
                 }
-                
+            
                 Spacer()
                 
                 Button(action: {
@@ -74,8 +88,7 @@ struct DetailView: View {
             .padding(.horizontal, 25)
             .padding(.vertical,10)
             
-            
-            // Income and expenditure
+            // 月度收支情况
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
                     HStack {
@@ -104,13 +117,37 @@ struct DetailView: View {
                         
                         Spacer()
                         
-                        DatePicker(
-                            selection: $date,
-                            displayedComponents: [.date],
-                            label: { Text("选择日期") }
-                        )
-                        .labelsHidden()
-                    }
+                        HStack() {
+                            Button(action: {
+                                monthOffset -= 1
+                                self.updateDate()
+                            }) {
+                                Image(systemName: "minus.circle.fill")
+                                    .foregroundColor(.blue)
+                            }
+                            
+//                            Text("  \(year)-\(month)  ") // 显示年-月
+//                                .font(.headline)
+//                                .foregroundColor(.white)
+//                                .background(Color.blue.opacity(0.8)
+//                                .clipShape(RoundedRectangle(cornerRadius: 5))) // 圆角背景
+                            
+                            DatePicker(
+                                selection: $selectedDate,
+                                displayedComponents: .date,
+                                label: {Text("选择月份")}
+                            )
+                            .labelsHidden()
+                            
+                            Button(action: {
+                                monthOffset += 1
+                                self.updateDate()
+                            }) {
+                                Image(systemName: "plus.circle.fill")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                    }.padding(.vertical,5)
                         
                     HStack{
                         Text("本年总支出：")
@@ -120,7 +157,7 @@ struct DetailView: View {
                             .font(.headline)
                             .foregroundColor(.red)
                     }
-                    .padding(.vertical,10)
+                    .padding(.vertical,5)
 
                     HStack{
                         Text("本年结余：")
@@ -129,13 +166,14 @@ struct DetailView: View {
                         Text("¥267.00")
                             .font(.headline)
                             .foregroundColor(.black)
-                    }.padding(.vertical,10)
+                    }
+                    .padding(.vertical,5)
                 }
+                .padding(.horizontal,10)
             }
-            .padding(.horizontal,10)
-
-
-            // Basic overview
+            .padding(.vertical,1)
+            
+            // 账本概览
             VStack(alignment: .leading) {
                 HStack {
                     Text("账本概览")
@@ -151,13 +189,19 @@ struct DetailView: View {
                     }
                 )
                 .padding(.vertical, 10) // 设置上下边距
-                    
+                
                 FlowList(flows: detailStore.flowListDto.flows)
             }
         }
     }
+    
+    private func updateDate() {
+        let calendar = Calendar.current
+        if let newDate = calendar.date(byAdding: .month, value: monthOffset, to: selectedDate) {
+            selectedDate = newDate
+        }
+    }
 }
-
 
 #Preview {
     DetailView()
