@@ -148,9 +148,9 @@ class AccountStore: ObservableObject {
             
             // 更新published的属性
             DispatchQueue.main.async {
-                // 在成功新增之后，更新本地数据
-                // TODO addAccount向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
-                self.accountResponseDtoList.append(account)
+                // 在成功新增之后，通过网络再请求一次loadAccounts()，本地更新不行，因为没有id
+                // addAccount向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
+                self.loadAccounts()
             }
         }
         task.resume()

@@ -163,11 +163,8 @@ class TypeStore: ObservableObject {
             
             // 更新published的属性
             DispatchQueue.main.async {
-                // 在成功新增之后，更新本地数据
-                // 将TypeSingleDto转化为TypeListResponseDto
-                // TODO 转换的时候没有考虑hasChild属性
-                // TODO addType向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
-                self.typeListResponseDtoList.append(TypeListResponseDto(id: typeSingleDto.id!, disable: typeSingleDto.disable, hasChild: false, archive: typeSingleDto.archive, tname: typeSingleDto.tname))
+                // 在成功新增之后，通过网络再请求一次loadTypes()，本地更新不行，因为没有id
+                self.loadTypes()
             }
         }
         task.resume()

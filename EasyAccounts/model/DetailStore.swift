@@ -81,7 +81,7 @@ class DetailStore: ObservableObject {
         // 更新属性：yearAndMonth
         // Int转String
         print("Year updated to: \(selectDate)")
-        let calendar = Calendar.current
+//        let calendar = Calendar.current
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM"
         let strYearAndMonth = dateFormatter.string(from: selectDate)
