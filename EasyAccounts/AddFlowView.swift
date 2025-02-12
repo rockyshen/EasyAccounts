@@ -64,9 +64,16 @@ struct AddFlowView: View {
                 
                 
                 DatePicker("账单日期", selection: $selectedDate, displayedComponents: .date)
-                    .onChange(of: selectedDate) { newDate, _ in
-                        selectedDate = newDate
-                        flowAddRequestDto.fDate = dateFormatter.string(from: newDate)
+// iOS 17.0以后适用
+//                    .onChange(of: selectedDate) { newDate, _ in
+//                        selectedDate = newDate
+//                        flowAddRequestDto.fDate = dateFormatter.string(from: newDate)
+//                    }
+                
+                // iOS 16.0适用
+                    .onChange(of: selectedDate) { selectedDate in
+//                        selectedDate = newDate
+                        flowAddRequestDto.fDate = dateFormatter.string(from: selectedDate)
                     }
                 
                 Toggle("是否收藏", isOn: $flowAddRequestDto.isCollect)
@@ -94,7 +101,7 @@ struct AddFlowView: View {
                         // 提交逻辑：将封装好的flowAddRequestDto传递给父组件DetailView
                         dismiss()
                         completion(flowAddRequestDto)
-                        
+                        print(flowAddRequestDto)
                     }
                     .padding()
                     .background(Color.blue)
