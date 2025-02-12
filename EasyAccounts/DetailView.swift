@@ -15,14 +15,6 @@ struct DetailView: View {
     @State private var showingDatePicker = false
     @State private var isShowingAddFlowView: Bool = false
     
-//    @State var year: Int = 2025 {
-//        // 向DetailStore传递2025-02，拼接URL
-//        didSet { detailStore.updateYear(year) }
-//    }
-//    @State var month: Int = 02 {
-//        didSet { detailStore.updateMonth(month) }
-//    }
-    
     @State private var selectedDate = Date(){
         didSet { detailStore.updateYearAndMonth(selectDate: selectedDate) }
     }
@@ -90,94 +82,8 @@ struct DetailView: View {
             
             // 月度收支情况
             VStack(alignment: .leading) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("月度收支情况").foregroundColor(.blue)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 10) // 设置左右边距
-                    .overlay(
-                        HStack {
-                            Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
-                            Spacer()
-                            Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
-                        }
-                    )
-                    .padding(.vertical, 10) // 设置上下边距
-                }
-                
-                VStack(alignment: .leading) {
-                    HStack {
-                        Text("当月总收入：")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("¥ " + detailStore.flowListDto.totalIn)
-                            .font(.headline)
-                            .foregroundColor(.green)
-                        
-                        Spacer()
-                        
-                        HStack() {
-                            Button(action: {
-                                monthOffset -= 1
-                                self.updateDate()
-                            }) {
-                                Image(systemName: "minus.circle.fill")
-                                    .foregroundColor(.blue)
-                            }
-                            
-//                            Text("  \(year)-\(month)  ") // 显示年-月
-//                                .font(.headline)
-//                                .foregroundColor(.white)
-//                                .background(Color.blue.opacity(0.8)
-//                                .clipShape(RoundedRectangle(cornerRadius: 5))) // 圆角背景
-                            
-                            DatePicker(
-                                selection: $selectedDate,
-                                displayedComponents: .date,
-                                label: {Text("选择月份")}
-                            )
-                            .labelsHidden()
-                            
-                            Button(action: {
-                                monthOffset += 1
-                                self.updateDate()
-                            }) {
-                                Image(systemName: "plus.circle.fill")
-                                    .foregroundColor(.blue)
-                            }
-                        }
-                    }.padding(.vertical,5)
-                        
-                    HStack{
-                        Text("本年总支出：")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("¥ " + detailStore.flowListDto.totalOut)
-                            .font(.headline)
-                            .foregroundColor(.red)
-                    }
-                    .padding(.vertical,5)
-
-                    HStack{
-                        Text("本年结余：")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                        Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
-                            .font(.headline)
-                            .foregroundColor(.black)
-                    }
-                    .padding(.vertical,5)
-                }
-                .padding(.horizontal,10)
-            }
-            .padding(.vertical,1)
-            
-            // 账本概览
-            VStack(alignment: .leading) {
                 HStack {
-                    Text("账本概览")
-                        .foregroundColor(.blue)
+                    Text("月度收支情况").foregroundColor(.blue)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
@@ -188,13 +94,94 @@ struct DetailView: View {
                         Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
                     }
                 )
-                .padding(.vertical, 10) // 设置上下边距
+//                        .padding(.vertical, 10) // 设置上下边距
+            }
+            HStack{
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("当月总收入：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + detailStore.flowListDto.totalIn)
+                                .font(.headline)
+                                .foregroundColor(.green)
+                            
+                            Spacer()
+                        }.padding(.vertical,2)
+                            
+                        HStack{
+                            Text("本年总支出：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + detailStore.flowListDto.totalOut)
+                                .font(.headline)
+                                .foregroundColor(.red)
+                        }
+                        .padding(.vertical,2)
+
+                        HStack{
+                            Text("本年结余：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .padding(.vertical,2)
+                    }
+                    .padding(.horizontal,10)
+                }
                 
+                // 月份选择器
+                HStack() {
+                    Button(action: {
+                        monthOffset -= 1
+                        self.updateDate()
+                    }) {
+                        Image(systemName: "minus.circle.fill")
+                            .foregroundColor(.blue)
+                    }
+                    
+                    DatePicker(
+                        selection: $selectedDate,
+                        displayedComponents: .date,
+                        label: {Text("选择月份")}
+                    )
+                    .labelsHidden()
+                    
+                    Button(action: {
+                        monthOffset += 1
+                        self.updateDate()
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.blue)
+                    }
+                }
+                
+            }
+            
+            // 账本概览
+            HStack {
+                Text("账本概览")
+                    .foregroundColor(.blue)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 10) // 设置左右边距
+            .overlay(
+                HStack {
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                    Spacer()
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                }
+            )
+            VStack(alignment: .leading) {
                 FlowList(flows: detailStore.flowListDto.flows)
             }
         }
     }
     
+    // 月份选择器，计算月份偏移的方法
     private func updateDate() {
         let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: .month, value: monthOffset, to: selectedDate) {
