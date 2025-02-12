@@ -16,9 +16,9 @@ struct GetFlowListMainResponse: Codable {
 }
 
 struct FlowListDto: Codable {
-    var totalIn: String
-    var totalOut: String
-    var totalEarn: String?
+    var totalIn: String        // 当月总收入
+    var totalOut: String       // 当月总支出
+    var totalEarn: String?     // 当月结余
     var typeList: [FlowTypeDto]?
     var flows: [FlowListSingleDto]
 }

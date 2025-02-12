@@ -111,7 +111,7 @@ struct DetailView: View {
                         Text("当月总收入：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥300.00")
+                        Text("¥ " + detailStore.flowListDto.totalIn)
                             .font(.headline)
                             .foregroundColor(.green)
                         
@@ -153,7 +153,7 @@ struct DetailView: View {
                         Text("本年总支出：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥33.00")
+                        Text("¥ " + detailStore.flowListDto.totalOut)
                             .font(.headline)
                             .foregroundColor(.red)
                     }
@@ -163,7 +163,7 @@ struct DetailView: View {
                         Text("本年结余：")
                             .font(.subheadline)
                             .foregroundColor(.black)
-                        Text("¥267.00")
+                        Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
                             .font(.headline)
                             .foregroundColor(.black)
                     }
