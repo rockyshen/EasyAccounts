@@ -36,7 +36,13 @@ struct TypeSingleDto: Identifiable, Codable {
 }
 
 class TypeStore: ObservableObject {
-    @Published var typeListResponseDtoList = [TypeListResponseDto(id: 1, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试")]
+    @Published var typeListResponseDtoList = [
+        TypeListResponseDto(id: 1, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "购物"),
+        TypeListResponseDto(id: 2, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "交通"),
+        TypeListResponseDto(id: 3, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "娱乐"),
+        TypeListResponseDto(id: 4, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "工资")
+    
+    ]
     
     init(){
         loadTypes()

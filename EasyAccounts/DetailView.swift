@@ -96,6 +96,7 @@ struct DetailView: View {
                 )
 //                        .padding(.vertical, 10) // 设置上下边距
             }
+            .padding(.horizontal, 10)
             HStack{
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
@@ -108,7 +109,7 @@ struct DetailView: View {
                                 .foregroundColor(.green)
                             
                             Spacer()
-                        }.padding(.vertical,2)
+                        }
                             
                         HStack{
                             Text("本年总支出：")
@@ -118,7 +119,6 @@ struct DetailView: View {
                                 .font(.headline)
                                 .foregroundColor(.red)
                         }
-                        .padding(.vertical,2)
 
                         HStack{
                             Text("本年结余：")
@@ -128,7 +128,7 @@ struct DetailView: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
-                        .padding(.vertical,2)
+                    
                     }
                     .padding(.horizontal,10)
                 }
@@ -141,6 +141,7 @@ struct DetailView: View {
                     }) {
                         Image(systemName: "minus.circle.fill")
                             .foregroundColor(.blue)
+                            .font(.title2)
                     }
                     
                     DatePicker(
@@ -156,8 +157,10 @@ struct DetailView: View {
                     }) {
                         Image(systemName: "plus.circle.fill")
                             .foregroundColor(.blue)
+                            .font(.title2)
                     }
                 }
+                .padding(.horizontal,8)
                 
             }
             
@@ -175,6 +178,7 @@ struct DetailView: View {
                     Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
                 }
             )
+            .padding()
             VStack(alignment: .leading) {
                 FlowList(flows: detailStore.flowListDto.flows)
             }

@@ -35,7 +35,28 @@ struct HomeAccountBean: Codable {
 
 class HomeStore: ObservableObject {
     // Published注解，必须声明为实例对象
-    @Published var homeDto = HomeDto(accounts: [], curIncome: nil, curOutCome: nil, netAsset: "", totalAsset: "", yearBalance: "", yearIncome: "", yearOutCome: "")
+    @Published var homeDto = HomeDto(
+        accounts: [
+            HomeAccountBean(accountAsset: "1000",
+                            accountName: "测试账户",
+                            exemptAsset: "200",
+                            id: 1,
+                            note: "Main savings account",
+                            percent: "10%"),
+            HomeAccountBean(accountAsset: "2500",
+                            accountName: "Swift Bank",
+                            exemptAsset: "300",
+                            id: 2,
+                            note: "Everyday transactions",
+                            percent: "15%")
+        ],
+        curIncome: "12000",
+        curOutCome: "8000",
+        netAsset: "19000",
+        totalAsset: "20000",
+        yearBalance: "4000",
+        yearIncome: "150000",
+        yearOutCome: "100000")
     
     init() {
         loadData()

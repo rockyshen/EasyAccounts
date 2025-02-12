@@ -133,5 +133,5 @@ struct OverView: View {
 
 
 #Preview {
-    OverView(homeStore: HomeStore())   // 这里构造HomeStore太复杂了，就不在这里预览了！
+    OverView()
 }

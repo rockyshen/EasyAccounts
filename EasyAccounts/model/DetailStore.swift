@@ -59,7 +59,41 @@ struct FlowAddRequestDto: Codable {
 }
 
 class DetailStore: ObservableObject {
-    @Published var flowListDto = FlowListDto(totalIn: "", totalOut: "", totalEarn: nil, typeList: nil, flows: [])
+    @Published var flowListDto = FlowListDto(
+        totalIn: "300",
+        totalOut: "150",
+        totalEarn: "150",
+        typeList: [
+            FlowTypeDto(typeName: "购物", money: "30", typeId: 101, parent: false, children: []),
+            FlowTypeDto(typeName: "交通", money: "30", typeId: 101, parent: false, children: []),
+            FlowTypeDto(typeName: "娱乐", money: "30", typeId: 101, parent: false, children: []),
+            FlowTypeDto(typeName: "工资", money: "30", typeId: 101, parent: false, children: [])
+        ],
+        flows: [
+            FlowListSingleDto(id: 1,
+                              money: "100",
+                              exempt: false,
+                              collect: true,
+                              handle: 0,
+                              note: "工资收入💰",
+                              toAName: "Savings Account",
+                              aname: "测试账户",
+                              tname: "工资",
+                              hname: "收入",
+                              fdate: "2023-01-10"),
+            FlowListSingleDto(id: 2,
+                              money: "200",
+                              exempt: true,
+                              collect: false,
+                              handle: 1,
+                              note: "霸王茶姬奶茶🥤",
+                              toAName: nil,
+                              aname: "Swift Bank",
+                              tname: "购物",
+                              hname: "支出",
+                              fdate: "2023-02-15")
+        ]
+    )
     
     var yearAndMonth: String{
         didSet { loadData() }

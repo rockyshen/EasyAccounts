@@ -24,7 +24,7 @@ struct AccountResponseDto: Identifiable, Codable {
 }
 
 class AccountStore: ObservableObject {
-    @Published var accountResponseDtoList = [AccountResponseDto(id: 0, name: "", money: "", exemptMoney: "", card: "", note: "")]
+    @Published var accountResponseDtoList = [AccountResponseDto(id: 0, name: "测试账户", money: "100", exemptMoney: "0", card: "0000-1111-2222-3333", note: "📝备注：测试账户")]
     
     init(){
         loadAccounts()
