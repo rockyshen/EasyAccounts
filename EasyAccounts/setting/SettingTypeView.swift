@@ -14,7 +14,10 @@ struct SettingTypeView: View {
     
     var body: some View {
         NavigationView {
-            TypeList(typeList: typeStore.typeListResponseDtoList)
+            TypeList(
+                typeList: typeStore.typeListResponseDtoList,
+                typeStore: typeStore
+            )
             .padding(15)
             .navigationTitle("分类")
             .navigationBarTitleDisplayMode(.inline)
@@ -32,7 +35,7 @@ struct SettingTypeView: View {
                     type: type,
                     completion: { newType in
 //                        print(newType)
-                         typeStore.addType(type: newType)
+                         typeStore.addType(typeSingleDto: newType)
                     }
                 )
             })

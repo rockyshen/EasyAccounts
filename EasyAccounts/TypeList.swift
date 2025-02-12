@@ -12,7 +12,9 @@ struct TypeList: View {
     
     @State var editingType: TypeSingleDto?
     
-    @StateObject var typeStore = TypeStore()
+    // 不能重复实例化typeStore
+//    @StateObject var typeStore = TypeStore()
+    var typeStore: TypeStore
     
     // 待删除的Type
     @State private var showingDeleteAlert = false
@@ -70,5 +72,5 @@ struct TypeList: View {
 #Preview {
     TypeList(typeList: [
         TypeListResponseDto(id: 1, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试"),
-        TypeListResponseDto(id: 2, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试2")])
+        TypeListResponseDto(id: 2, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试2")], typeStore: TypeStore())
 }

@@ -66,7 +66,6 @@ class TypeStore: ObservableObject {
     }
     
     // 更新Type
-    // 注意：是PUT请求，不是POST http://localhost:8085/type/updateType/{id}
     func updateType(typeSingleDto: TypeSingleDto){
         guard let url = URL(string: "http://localhost:8085/type/updateType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
@@ -110,13 +109,22 @@ class TypeStore: ObservableObject {
                     print("Error parsing JSON: \(error)")
                 }
             }
+            
+            DispatchQueue.main.async {
+                // 在更新成功后，本地更新数据列表
+                if let index = self.typeListResponseDtoList.firstIndex(where: { $0.id == typeSingleDto.id! }) {
+                    // typeSingleDto 转为 typeListResponseDto
+                    // TODO 转换的时候没有考虑hasChild属性
+                    self.typeListResponseDtoList[index] = TypeListResponseDto(id: typeSingleDto.id!, disable: typeSingleDto.disable, hasChild: false, archive: typeSingleDto.archive, tname: typeSingleDto.tname)
+                }
+            }
         }
         task.resume()
     }
     
     // 新增一个Type
     // http://localhost:8085/type/addType
-    func addType(type: TypeSingleDto) {
+    func addType(typeSingleDto: TypeSingleDto) {
         let url = URL(string: "http://localhost:8085/type/addType")!
             
         var request = URLRequest(url: url)
@@ -124,7 +132,7 @@ class TypeStore: ObservableObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         do {
-            let jsonData = try JSONEncoder().encode(type)
+            let jsonData = try JSONEncoder().encode(typeSingleDto)
             request.httpBody = jsonData
         } catch {
             print("Error encoding JSON: \(error)")
@@ -152,12 +160,20 @@ class TypeStore: ObservableObject {
                     print("Error parsing JSON: \(error)")
                 }
             }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 在成功新增之后，更新本地数据
+                // 将TypeSingleDto转化为TypeListResponseDto
+                // TODO 转换的时候没有考虑hasChild属性
+                // TODO addType向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
+                self.typeListResponseDtoList.append(TypeListResponseDto(id: typeSingleDto.id!, disable: typeSingleDto.disable, hasChild: false, archive: typeSingleDto.archive, tname: typeSingleDto.tname))
+            }
         }
         task.resume()
     }
     
     // 删除一个Type,基于id
-    // 注意：是DELETE请求 http://localhost:8085/type/deleteType/{id}
     func deleteType(typeSingleDto: TypeSingleDto){
         guard let url = URL(string: "http://localhost:8085/type/deleteType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
@@ -200,6 +216,12 @@ class TypeStore: ObservableObject {
                 } catch {
                     print("Error parsing JSON: \(error)")
                 }
+            }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 在成功新增之后，更新本地数据
+                self.typeListResponseDtoList.removeAll { $0.id == typeSingleDto.id }
             }
         }
         task.resume()

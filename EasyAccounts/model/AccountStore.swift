@@ -23,14 +23,11 @@ struct AccountResponseDto: Identifiable, Codable {
     var note: String
 }
 
-
-
 class AccountStore: ObservableObject {
     @Published var accountResponseDtoList = [AccountResponseDto(id: 0, name: "", money: "", exemptMoney: "", card: "", note: "")]
     
     init(){
         loadAccounts()
-        
     }
     
     // 向后端请求获取所有账户信息列表
@@ -48,6 +45,7 @@ class AccountStore: ObservableObject {
                     return
             }
             
+            // 只有更新了store属性，其他视图才会自动刷新
             DispatchQueue.main.async {
                 self.accountResponseDtoList = baseDto.data!
             }
@@ -55,7 +53,6 @@ class AccountStore: ObservableObject {
     }
     
     // 更新账户
-    // 注意是PUT请求，不是 POST请求 http://localhost:8085/account/updateAccount/{id}
     func updateAccount(account: AccountResponseDto){
         // 构建 URL，将 account.id 插入到 URL 路径中
         guard let url = URL(string: "http://localhost:8085/account/updateAccount/\(account.id!)") else {
@@ -98,18 +95,26 @@ class AccountStore: ObservableObject {
                     print("Error parsing JSON: \(error)")
                 }
             }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 在成功更新的情况下，更新本地数据
+                // 测试：已经更新进去了！
+                if let index = self.accountResponseDtoList.firstIndex(where: { $0.id == account.id }) {
+                    self.accountResponseDtoList[index] = account
+                }
+            }
         }
         task.resume()
     }
     
     // 增加一个新账户
-    // http://localhost:8085/account/addAccount
     func addAccount(account: AccountResponseDto){
         let url = URL(string: "http://localhost:8085/account/addAccount")!
             
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
         do {
             let jsonData = try JSONEncoder().encode(account)
@@ -140,13 +145,18 @@ class AccountStore: ObservableObject {
                     print("Error parsing JSON: \(error)")
                 }
             }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 在成功新增之后，更新本地数据
+                // TODO addAccount向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
+                self.accountResponseDtoList.append(account)
+            }
         }
         task.resume()
-        
     }
     
     // 删除一个账户
-    // http://localhost:8085/account/deleteAccount/{id}
     func deleteAccount(account: AccountResponseDto) {
         guard let url = URL(string: "http://localhost:8085/account/deleteAccount/\(account.id!)") else {
                 print("Invalid URL")
@@ -187,6 +197,12 @@ class AccountStore: ObservableObject {
                 } catch {
                     print("Error parsing JSON: \(error)")
                 }
+            }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 在成功新增之后，更新本地数据
+                self.accountResponseDtoList.removeAll { $0.id == account.id }
             }
         }
         task.resume()

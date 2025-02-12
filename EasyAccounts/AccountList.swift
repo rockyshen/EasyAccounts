@@ -8,12 +8,14 @@
 import SwiftUI
 
 struct AccountList: View {
+    // 这里重复new一个store，会不会导致数据不更新？
+    var accountStore: AccountStore
+    
     var accounts: [AccountResponseDto]
     
     @State var editingAccount: AccountResponseDto?
     
-    @StateObject var accountStore = AccountStore()
-    
+    // 删除操作时，弹出提示框，相关的属性
     @State private var showingDeleteAlert = false
     @State private var selectedAccount: AccountResponseDto?
     
@@ -62,7 +64,7 @@ struct AccountList: View {
 }
 
 #Preview {
-    AccountList(accounts: [
+    AccountList(accountStore:AccountStore(), accounts: [
         AccountResponseDto(id: 1, name: "SwiftBank", money: "100", exemptMoney: "0", card: "0000-0000-0000-0000", createTime: nil, note: "备注"),
         AccountResponseDto(id: 2, name: "TestBank", money: "88", exemptMoney: "0", card: "0000-0000-0000-1234", createTime: nil, note: "备注"),
         

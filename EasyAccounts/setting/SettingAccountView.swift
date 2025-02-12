@@ -14,7 +14,7 @@ struct SettingAccountView: View {
     
     var body: some View {
         NavigationView {
-            AccountList(accounts: accountStore.accountResponseDtoList)
+            AccountList(accountStore: accountStore, accounts: accountStore.accountResponseDtoList)
             .padding(15)
             .navigationTitle("账户")
             .navigationBarTitleDisplayMode(.inline)
