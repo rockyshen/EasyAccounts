@@ -51,6 +51,7 @@ class TypeStore: ObservableObject {
     // 向后端请求获取所有类别信息列表
     func loadTypes() {
         let url = URL(string: "http://localhost:8085/type/getType")!
+//        let url = URL(string: "http://118.25.46.207:10670/type/getType")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
@@ -74,6 +75,7 @@ class TypeStore: ObservableObject {
     // 更新Type
     func updateType(typeSingleDto: TypeSingleDto){
         guard let url = URL(string: "http://localhost:8085/type/updateType/\(typeSingleDto.id!)") else {
+//        guard let url = URL(string: "http://118.25.46.207:10670/type/updateType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
                 return
             }
@@ -132,6 +134,7 @@ class TypeStore: ObservableObject {
     // http://localhost:8085/type/addType
     func addType(typeSingleDto: TypeSingleDto) {
         let url = URL(string: "http://localhost:8085/type/addType")!
+//        let url = URL(string: "http://118.25.46.207:10670/type/addType")!
             
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -179,6 +182,7 @@ class TypeStore: ObservableObject {
     // 删除一个Type,基于id
     func deleteType(typeSingleDto: TypeSingleDto){
         guard let url = URL(string: "http://localhost:8085/type/deleteType/\(typeSingleDto.id!)") else {
+//        guard let url = URL(string: "http://118.25.46.207:10670/type/deleteType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
                 return
             }

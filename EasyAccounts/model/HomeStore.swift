@@ -64,7 +64,8 @@ class HomeStore: ObservableObject {
     
     // 加载“总览页”数据
     func loadData() {
-        let url = URL(string: "http://localhost:8085/home/getHomeInfo")!
+//        let url = URL(string: "http://localhost:8085/home/getHomeInfo")!
+        let url = URL(string: "http://118.25.46.207:10670/home/getHomeInfo")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {

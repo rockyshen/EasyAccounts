@@ -33,6 +33,7 @@ class AccountStore: ObservableObject {
     // 向后端请求获取所有账户信息列表
     func loadAccounts() {
         let url = URL(string: "http://localhost:8085/account/getAccount")!
+//        let url = URL(string: "http://118.25.46.207:10670/account/getAccount")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
@@ -56,6 +57,7 @@ class AccountStore: ObservableObject {
     func updateAccount(account: AccountResponseDto){
         // 构建 URL，将 account.id 插入到 URL 路径中
         guard let url = URL(string: "http://localhost:8085/account/updateAccount/\(account.id!)") else {
+//        guard let url = URL(string: "http://118.25.46.207:10670/account/updateAccount/\(account.id!)") else {
             print("Invalid URL")
             return
         }
@@ -111,6 +113,7 @@ class AccountStore: ObservableObject {
     // 增加一个新账户
     func addAccount(account: AccountResponseDto){
         let url = URL(string: "http://localhost:8085/account/addAccount")!
+//        let url = URL(string: "http://118.25.46.207:10670/account/addAccount")!
             
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -159,6 +162,7 @@ class AccountStore: ObservableObject {
     // 删除一个账户
     func deleteAccount(account: AccountResponseDto) {
         guard let url = URL(string: "http://localhost:8085/account/deleteAccount/\(account.id!)") else {
+//        guard let url = URL(string: "http://118.25.46.207:10670/account/deleteAccount/\(account.id!)") else {
                 print("Invalid URL")
                 return
             }

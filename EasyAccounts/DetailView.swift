@@ -133,34 +133,50 @@ struct DetailView: View {
                     .padding(.horizontal,10)
                 }
                 
-                // 月份选择器
-                HStack() {
-                    Button(action: {
-                        monthOffset -= 1
-                        self.updateDate()
-                    }) {
-                        Image(systemName: "minus.circle.fill")
-                            .foregroundColor(.blue)
-                            .font(.title2)
+                VStack {
+                    // 月份选择器
+                    HStack() {
+                        Button(action: {
+                            monthOffset -= 1
+                            self.updateDate()
+                        }) {
+                            Image(systemName: "minus.circle.fill")
+                                .foregroundColor(.blue)
+                                .font(.title2)
+                        }
+                        
+                        DatePicker(
+                            selection: $selectedDate,
+                            displayedComponents: .date,
+                            label: {Text("选择月份")}
+                        )
+                        .labelsHidden()
+                        
+                        Button(action: {
+                            monthOffset += 1
+                            self.updateDate()
+                        }) {
+                            Image(systemName: "plus.circle.fill")
+                                .foregroundColor(.blue)
+                                .font(.title2)
+                        }
                     }
-                    
-                    DatePicker(
-                        selection: $selectedDate,
-                        displayedComponents: .date,
-                        label: {Text("选择月份")}
-                    )
-                    .labelsHidden()
+                    .padding(.horizontal,5)
                     
                     Button(action: {
-                        monthOffset += 1
-                        self.updateDate()
+                        // 在这里添加生成报表的逻辑
+                        print("报表已生成")
+                        detailStore.makeExcel()
                     }) {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.blue)
-                            .font(.title2)
+                        Text("生成报表")
+                            .frame(maxWidth: 100, maxHeight: 5) // 使文本自适应按钮大小
+                            .padding() // 添加内边距
+                            .background(Color.blue.opacity(0.8)) // 设置背景颜色和透明度
+                            .cornerRadius(8) // 设置圆角半径
+                            .foregroundColor(.white) // 设置文本颜色
                     }
+                    .padding(.vertical,8)
                 }
-                .padding(.horizontal,8)
                 
             }
             

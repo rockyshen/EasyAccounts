@@ -128,6 +128,7 @@ class DetailStore: ObservableObject {
     func loadData() {
         // 此处需要通过变量拼接URL 2025-01
         let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
+//        let url = URL(string: "http://118.25.46.207:10670/flow/getFlowListMain/3/0/\(yearAndMonth)")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
@@ -150,6 +151,7 @@ class DetailStore: ObservableObject {
     // 增：添加一条流水记录
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
         if let url = URL(string: "http://localhost:8085/flow/addFlow") {
+//        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -186,4 +188,12 @@ class DetailStore: ObservableObject {
     
     // TODO 改：修改一条流水记录
     func update(){}
+    
+    // 生成报表按钮
+    // http://localhost:8085/flow/makeExcel/2025-02
+    func makeExcel() {
+        let url = URL(string: "http://localhost:8085/flow/makeExcel/\(yearAndMonth)")!
+        print(url)
+        
+    }
 }
