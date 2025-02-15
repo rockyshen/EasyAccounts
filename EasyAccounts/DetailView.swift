@@ -15,10 +15,22 @@ struct DetailView: View {
     @State private var showingDatePicker = false
     @State private var isShowingAddFlowView: Bool = false
     
-    @State private var selectedDate = Date(){
+    @State private var selectedDate = Date()
+    {
         didSet { detailStore.updateYearAndMonth(selectDate: selectedDate) }
     }
-    @State private var monthOffset = 0
+    
+    @State private var year: Int
+    @State private var month: Int
+    
+    
+        // 初始化为系统当前年月
+    init() {
+        let currentDate = Date()
+        let calendar = Calendar.current
+        self._year = State(initialValue: calendar.component(.year, from: currentDate))
+        self._month = State(initialValue: calendar.component(.month, from: currentDate))
+    }
     
     
     var body: some View {
@@ -135,33 +147,27 @@ struct DetailView: View {
                 
                 VStack {
                     // 月份选择器
-                    HStack() {
-                        Button(action: {
-                            monthOffset -= 1
-                            self.updateDate()
-                        }) {
-                            Image(systemName: "minus.circle.fill")
-                                .foregroundColor(.blue)
-                                .font(.title2)
+                    HStack {
+                        Button(action: decrementMonth) {
+                            Text("-")
+                                .font(.largeTitle)
+//                                .padding()
                         }
                         
-                        DatePicker(
-                            selection: $selectedDate,
-                            displayedComponents: .date,
-                            label: {Text("选择月份")}
-                        )
-                        .labelsHidden()
+                        Text("\(year) - \(String(format: "%02d", month))")
+                            .font(.headline)
+                            .frame(maxWidth: 90, maxHeight: 5)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
                         
-                        Button(action: {
-                            monthOffset += 1
-                            self.updateDate()
-                        }) {
-                            Image(systemName: "plus.circle.fill")
-                                .foregroundColor(.blue)
-                                .font(.title2)
+                        Button(action: incrementMonth) {
+                            Text("+")
+                                .font(.largeTitle)
+//                                .padding()
                         }
                     }
-                    .padding(.horizontal,5)
                     
                     Button(action: {
                         // 在这里添加生成报表的逻辑
@@ -201,12 +207,29 @@ struct DetailView: View {
         }
     }
     
-    // 月份选择器，计算月份偏移的方法
-    private func updateDate() {
-        let calendar = Calendar.current
-        if let newDate = calendar.date(byAdding: .month, value: monthOffset, to: selectedDate) {
-            selectedDate = newDate
+    // 月份选择器，计算月份加减的方法
+    private func updateSelectedDate() {
+            if let newDate = Calendar.current.date(from: DateComponents(year: year, month: month)) {
+                selectedDate = newDate
+            }
         }
+    
+    private func incrementMonth() {
+        month += 1
+        if month > 12 {
+            month = 1
+            year += 1
+        }
+        updateSelectedDate()
+    }
+    
+    private func decrementMonth() {
+        month -= 1
+        if month < 1 {
+            month = 12
+            year -= 1
+        }
+        updateSelectedDate()
     }
 }
 

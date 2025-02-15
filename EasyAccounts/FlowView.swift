@@ -29,7 +29,7 @@ struct FlowView: View {
             Spacer()
             
             HStack{
-                VStack{
+                VStack(alignment: .trailing){
                     HStack{
                         Text("¥")
                         Text(flow.money)
