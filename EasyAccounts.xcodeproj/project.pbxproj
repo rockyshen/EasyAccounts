@@ -19,6 +19,7 @@
 		64373EFB2D5AE5A0007072DC /* TypeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFA2D5AE5A0007072DC /* TypeList.swift */; };
 		64373EFE2D5AF1F1007072DC /* AccountEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFD2D5AF1F1007072DC /* AccountEditView.swift */; };
 		64373F002D5AF22A007072DC /* TypeEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EFF2D5AF22A007072DC /* TypeEditView.swift */; };
+		64C368CA2D60CB6E003770A3 /* ImagePickerView in Frameworks */ = {isa = PBXBuildFile; productRef = 64C368C92D60CB6E003770A3 /* ImagePickerView */; };
 		64DA4E402D4E134900EE1521 /* EasyAccountsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */; };
 		64DA4E422D4E134900EE1521 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64DA4E412D4E134900EE1521 /* ContentView.swift */; };
 		64DA4E442D4E134B00EE1521 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64DA4E432D4E134B00EE1521 /* Assets.xcassets */; };
@@ -68,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64C368CA2D60CB6E003770A3 /* ImagePickerView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,6 +172,9 @@
 			dependencies = (
 			);
 			name = EasyAccounts;
+			packageProductDependencies = (
+				64C368C92D60CB6E003770A3 /* ImagePickerView */,
+			);
 			productName = EasyAccounts;
 			productReference = 64DA4E3C2D4E134900EE1521 /* EasyAccounts.app */;
 			productType = "com.apple.product-type.application";
@@ -198,6 +203,9 @@
 				Base,
 			);
 			mainGroup = 64DA4E332D4E134900EE1521;
+			packageReferences = (
+				64C368C82D60CB6E003770A3 /* XCRemoteSwiftPackageReference "ImagePickerView" */,
+			);
 			productRefGroup = 64DA4E3D2D4E134900EE1521 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -454,6 +462,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		64C368C82D60CB6E003770A3 /* XCRemoteSwiftPackageReference "ImagePickerView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ralfebert/ImagePickerView";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		64C368C92D60CB6E003770A3 /* ImagePickerView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64C368C82D60CB6E003770A3 /* XCRemoteSwiftPackageReference "ImagePickerView" */;
+			productName = ImagePickerView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 64DA4E342D4E134900EE1521 /* Project object */;
 }

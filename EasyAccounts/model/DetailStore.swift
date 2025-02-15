@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // 用后端方法名作为类名，表示是这个类响应的response
 struct DetailResponse: Codable {
@@ -232,6 +233,94 @@ class DetailStore: ObservableObject {
                 print(baseDto.code)
             }
         }.resume()
+    }
+    
+    // 调用后端AI识别账单，自动追加流水的能力
+    // http://localhost:8085/flow/analyzeFlowByAi
+    func analyzeFlowByAi(flowImg: UIImage){
+        // 压缩图像以确保其小于 1MB，因为后端限制1MB，否则拒收
+        let maximumFileSize = 1048576 // 1MB
+        let compressionQuality: CGFloat = 1.0
+        var imageData: Data?
         
+        // 尝试以不同的压缩比获取图片数据
+        for quality in stride(from: compressionQuality, through: 0, by: -0.1) {
+            if let compressedData = flowImg.jpegData(compressionQuality: quality) {
+                if compressedData.count < maximumFileSize {
+                    imageData = compressedData
+                    break
+                }
+            }
+        }
+        
+        // 将 UIImage 转换为 JPEG 数据
+        guard let jpegData = imageData else {
+                print("Failed to compress image within the size limit.")
+                return
+            }
+        
+        // 创建请求的 URL
+        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
+            print("Invalid URL")
+            return
+        }
+        
+        // 创建可变请求对象
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // 生成 boundary
+        let boundary = "Boundary-\(UUID().uuidString)"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        // 构建 multipart/form-data 体
+        var body = Data()
+        let fileName = "image.jpg"
+        let mimeType = "image/jpeg"
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+        body.append(jpegData)
+        body.append("\r\n".data(using: .utf8)!)
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        request.httpBody = body
+        
+        // 创建 URLSession 数据任务
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            // 处理响应
+            if let error = error {
+                print("Error during request: \(error)")
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response")
+                return
+            }
+            
+            // 检查响应状态码
+            if (200...299).contains(httpResponse.statusCode) {
+                print("Image uploaded successfully!")
+                
+                // 如果服务器返回了 JSON 数据，可以在此处解析
+                if let responseData = data {
+                    // 解析服务器返回的数据
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
+                            print("Response JSON: \(json)")
+                        }
+                    } catch {
+                        print("Failed to parse JSON response: \(error)")
+                    }
+                }
+            } else {
+                print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
+            }
+        }
+        
+        // 启动任务
+        task.resume()
     }
 }

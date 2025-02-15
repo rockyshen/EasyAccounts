@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import ImagePickerView
 
 struct DetailView: View {
     @StateObject var detailStore = DetailStore()
@@ -23,6 +24,8 @@ struct DetailView: View {
     @State private var year: Int
     @State private var month: Int
     
+    @State var image: UIImage?
+    @State var showImagePicker: Bool = false
     
     // 初始化为系统当前年月
     init() {
@@ -40,7 +43,8 @@ struct DetailView: View {
                     .font(.largeTitle)
                     .foregroundColor(.white)
                 Spacer()
-                HStack {
+                
+                VStack {
                     Button(action: {
                         isShowingAddFlowView.toggle()
                     }, label : {
@@ -49,11 +53,24 @@ struct DetailView: View {
                             .foregroundColor(.white)
                     })
                     .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
                     .sheet(isPresented: $isShowingAddFlowView, content: {
                         AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
                     })
+                    
+                    Button(action: {
+                        // 弹出图片选择器
+                        showImagePicker.toggle()
+                    }, label : {
+                        Text("AI识别")
+                            .font(.subheadline)
+                            .foregroundColor(.white)
+                    })
+                    .sheet(isPresented: $showImagePicker){
+                        ImagePickerView(sourceType: .photoLibrary){
+                            image in self.image = image
+                            detailStore.analyzeFlowByAi(flowImg: image)
+                        }
+                    }
                 }
             }
             .padding()

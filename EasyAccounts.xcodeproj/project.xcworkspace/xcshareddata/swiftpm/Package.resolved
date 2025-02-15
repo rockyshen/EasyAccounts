@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "imagepickerview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ralfebert/ImagePickerView",
+      "state" : {
+        "branch" : "master",
+        "revision" : "b84dd1c85a65cddba40c89699cd63ba0cb248dbd"
+      }
+    }
+  ],
+  "version" : 2
+}
