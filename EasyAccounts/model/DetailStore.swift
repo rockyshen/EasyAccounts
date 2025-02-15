@@ -237,7 +237,7 @@ class DetailStore: ObservableObject {
     
     // 调用后端AI识别账单，自动追加流水的能力
     // http://localhost:8085/flow/analyzeFlowByAi
-    func analyzeFlowByAi(flowImg: UIImage){
+    func analyzeFlowByAi(flowImg: UIImage, completion: @escaping (String) -> Void){
         // 压缩图像以确保其小于 1MB，因为后端限制1MB，否则拒收
         let maximumFileSize = 1048576 // 1MB
         let compressionQuality: CGFloat = 1.0
@@ -310,7 +310,14 @@ class DetailStore: ObservableObject {
                     do {
                         if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
                             print("Response JSON: \(json)")
+                            
+                            if let message = json["msg"], message as! String == "Success" {
+                                completion("添加成功")
+                            } else {
+                                completion("上传失败")
+                            }
                         }
+
                     } catch {
                         print("Failed to parse JSON response: \(error)")
                     }

@@ -27,6 +27,10 @@ struct DetailView: View {
     @State var image: UIImage?
     @State var showImagePicker: Bool = false
     
+    // AI识别，等待框
+    @State var isLoading: Bool = false
+    @State var responseMessage: String?
+    
     // 初始化为系统当前年月
     init() {
         let currentDate = Date()
@@ -68,8 +72,22 @@ struct DetailView: View {
                     .sheet(isPresented: $showImagePicker){
                         ImagePickerView(sourceType: .photoLibrary){
                             image in self.image = image
-                            detailStore.analyzeFlowByAi(flowImg: image)
+                            self.isLoading = true
+                            detailStore.analyzeFlowByAi(flowImg: image) {
+                                responseMsg in self.isLoading = false
+                                self.responseMessage = responseMsg
+                            }
                         }
+                    }
+                    
+                    if isLoading {
+                        ProgressView("AI正在识别。。。")
+                    }
+                    
+                    if let message = responseMessage {
+                        Text(message)
+                            .padding()
+                            .foregroundColor(message == "添加成功" ? .green : .red)
                     }
                 }
             }
