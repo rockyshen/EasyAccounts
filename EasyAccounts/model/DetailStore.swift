@@ -9,7 +9,7 @@
 import Foundation
 
 // 用后端方法名作为类名，表示是这个类响应的response
-struct GetFlowListMainResponse: Codable {
+struct DetailResponse: Codable {
     let code: Int
     let data: FlowListDto
     let msg: String
@@ -57,6 +57,35 @@ struct FlowAddRequestDto: Codable {
     var isCollect: Bool     // 是否收藏
     var note: String        // 备注
 }
+
+// 生成月度Excel的实体类
+struct MonthExcelData {
+    var currentMonth: String
+    var monthTotalIn: String
+    var monthTotalOut: String
+    var monthTotalEarn: String
+    var allAsset: String
+    var flow: [Flow]
+    var excelAccounts: [Account]
+
+    // Optionally, you can add initializers or methods if needed
+}
+
+// MonthExcelData内部声明的Flow和Account
+struct Account {
+    var accountName: String
+    var accountMoney: String
+}
+
+struct Flow {
+    var flowDate: String
+    var actionName: String
+    var typeName: String
+    var accountName: String
+    var money: String
+    var note: String
+}
+
 
 class DetailStore: ObservableObject {
     @Published var flowListDto = FlowListDto(
@@ -107,7 +136,6 @@ class DetailStore: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM"
         // 格式化当前日期
         self.yearAndMonth = dateFormatter.string(from: currentDate)
-        
         loadData()
     }
     
@@ -115,25 +143,22 @@ class DetailStore: ObservableObject {
         // 更新属性：yearAndMonth
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM"
-        let strYearAndMonth = dateFormatter.string(from: selectDate)
-
-        print(strYearAndMonth)
-        
+//        let strYearAndMonth = dateFormatter.string(from: selectDate)
         self.yearAndMonth = dateFormatter.string(from: selectDate)
     }
     
+    // 加载当月流水信息
+    // http://118.25.46.207:10670/flow/getFlowListMain/3/0/2025-02
     func loadData() {
         // 此处需要通过变量拼接URL 2025-01
         let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
-//        let url = URL(string: "http://118.25.46.207:10670/flow/getFlowListMain/3/0/\(yearAndMonth)")!
-        
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 print("No data received: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
-            guard let baseDto = try? JSONDecoder().decode(GetFlowListMainResponse.self, from: data) else {
+            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
                     print("Unable to decode JSON data")
                     return
             }
@@ -146,9 +171,9 @@ class DetailStore: ObservableObject {
     }
     
     // 增：添加一条流水记录
+    // http://118.25.46.207:10670/flow/addFlow
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
         if let url = URL(string: "http://localhost:8085/flow/addFlow") {
-//        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -190,7 +215,23 @@ class DetailStore: ObservableObject {
     // http://localhost:8085/flow/makeExcel/2025-02
     func makeExcel() {
         let url = URL(string: "http://localhost:8085/flow/makeExcel/\(yearAndMonth)")!
-        print(url)
+        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data else {
+                print("No data received: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
+                    print("Unable to decode JSON data")
+                    return
+            }
+            
+            DispatchQueue.main.async {
+                // 导出成功，就答应一下code
+                print(baseDto.code)
+            }
+        }.resume()
         
     }
 }

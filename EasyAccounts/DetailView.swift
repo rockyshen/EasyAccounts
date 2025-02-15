@@ -24,14 +24,13 @@ struct DetailView: View {
     @State private var month: Int
     
     
-        // 初始化为系统当前年月
+    // 初始化为系统当前年月
     init() {
         let currentDate = Date()
         let calendar = Calendar.current
         self._year = State(initialValue: calendar.component(.year, from: currentDate))
         self._month = State(initialValue: calendar.component(.month, from: currentDate))
     }
-    
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -43,7 +42,6 @@ struct DetailView: View {
                 Spacer()
                 HStack {
                     Button(action: {
-                        // Add functionality for menu button
                         isShowingAddFlowView.toggle()
                     }, label : {
                         Text("记一笔")
@@ -145,7 +143,7 @@ struct DetailView: View {
                     .padding(.horizontal,10)
                 }
                 
-                VStack {
+                VStack(spacing: 10) {
                     // 月份选择器
                     HStack {
                         Button(action: decrementMonth) {
@@ -175,15 +173,15 @@ struct DetailView: View {
                         detailStore.makeExcel()
                     }) {
                         Text("生成报表")
-                            .frame(maxWidth: 100, maxHeight: 5) // 使文本自适应按钮大小
+                            .frame(maxWidth: 90, maxHeight: 5) // 使文本自适应按钮大小
                             .padding() // 添加内边距
                             .background(Color.blue.opacity(0.8)) // 设置背景颜色和透明度
                             .cornerRadius(8) // 设置圆角半径
                             .foregroundColor(.white) // 设置文本颜色
                     }
-                    .padding(.vertical,8)
+//                    .padding(.vertical,8)
                 }
-                
+                .padding(.trailing,10)
             }
             
             // 账本概览
@@ -192,7 +190,7 @@ struct DetailView: View {
                     .foregroundColor(.blue)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 10) // 设置左右边距
+            //.padding(.horizontal, 10) // 设置左右边距
             .overlay(
                 HStack {
                     Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线

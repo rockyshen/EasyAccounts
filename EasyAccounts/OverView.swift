@@ -90,7 +90,7 @@ struct OverView: View {
                     }
                 }
             }
-            .padding()
+            .padding(10)
             
             // Account assets
             VStack(alignment: .leading) {
@@ -113,17 +113,18 @@ struct OverView: View {
                     ForEach(homeStore.homeDto.accounts, id: \.id) { account in
                         HStack {
                             Text(account.accountName)
-                                .font(.subheadline)
+                                .font(.headline)
                                 .foregroundColor(.black)
                             Spacer()
                             Text("¥\(account.accountAsset)")
-                                .font(.headline)
+                                .font(.title3)
                                 .foregroundColor(.blue)
                         }
                     }
-                }.listStyle(PlainListStyle())
+                }
+                .listStyle(PlainListStyle())
             }
-            .padding()
+            .padding(10)
             
             Spacer()
 

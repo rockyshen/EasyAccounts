@@ -62,7 +62,7 @@ struct ScreenView: View {
                         Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
                     }
                 )
-                .padding(.vertical, 10) // 设置上下边距
+//                .padding(.vertical, 10) // 设置上下边距
             }
             .padding(.horizontal,10)
             
@@ -82,7 +82,6 @@ struct ScreenView: View {
                     }
                 }
             }
-            .padding()
             
             // Current period income and expenditure
             VStack(alignment: .leading) {
@@ -98,7 +97,7 @@ struct ScreenView: View {
                         Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
                     }
                 )
-                .padding(.vertical, 10) // 设置上下边距
+                .padding(10) // 设置上下边距
                 
                 HStack {
                     Text("当期总收入")
@@ -115,15 +114,18 @@ struct ScreenView: View {
                     }) {
                         Text("查看分类明细")
                             .foregroundColor(.blue)
+                            .padding(.horizontal,10)
                     }
-                }
+                }.padding(.horizontal,10)
+                
                 HStack {
                     Text("本年结余：¥267.00")
                         .font(.subheadline)
                         .foregroundColor(.black)
                 }
+                .padding(.horizontal,10)
             }
-            .padding()
+//            .padding()
             
             // Current bill overview
             VStack(alignment: .leading) {
@@ -139,17 +141,17 @@ struct ScreenView: View {
                         Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
                     }
                 )
-                .padding(.vertical, 10) // 设置上下边距
+//                .padding(.vertical, 10) // 设置上下边距
                 
                 FlowList(flows: detailStore.flowListDto.flows)
             }
-            .padding()
+            .padding(10)
         }
     }
 }
 
 
 
-//#Preview {
-//    ScreenView()
-//}
+#Preview {
+    ScreenView()
+}
