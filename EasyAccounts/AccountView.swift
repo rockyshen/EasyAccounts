@@ -15,7 +15,7 @@ struct AccountView: View {
             VStack(alignment: .leading) {
                 Text(accountResponseDto.name)
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.blackDarkMode)
                 
                 Text(accountResponseDto.card)
                     .font(.footnote)
@@ -27,7 +27,7 @@ struct AccountView: View {
             // 一个圆形的银行logo
             Image(systemName: "creditcard.fill")
                 .font(.title3)
-                .foregroundColor(.blue) // 设置图标颜色，根据需要调整
+                .foregroundColor(.accentColor) // 设置图标颜色，根据需要调整
                 .frame(width: 40, height: 40) // 设置圆形 logo 的大小
                 .clipShape(Circle()) // 裁剪为圆形
                 .overlay(Circle().stroke(Color.gray, lineWidth: 1))

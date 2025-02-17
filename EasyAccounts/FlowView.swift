@@ -15,11 +15,11 @@ struct FlowView: View {
             VStack(alignment: .leading) {
                 Text(flow.fdate)
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.blackDarkMode)
                 
                 Text(flow.tname)
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.blackDarkMode)
                 
                 Text(shortenText(flow.note, to: 20))
                     .font(.footnote)

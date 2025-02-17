@@ -126,7 +126,7 @@ struct DetailView: View {
                 }) {
                     Text("总览")
                         .font(.title3) // 设置字体大小
-                        .foregroundColor(.black) // 设置字体颜色
+                        .foregroundColor(.blackDarkMode) // 设置字体颜色
                     Image(systemName: "arrowtriangle.down.fill")
                         .foregroundColor(.gray)
                         .font(.footnote)
@@ -140,7 +140,7 @@ struct DetailView: View {
                 }) {
                     Text("按时间排序")
                         .font(.title3)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blackDarkMode)
                     Image(systemName: "arrowtriangle.down.fill")
                         .foregroundColor(.gray)
                         .font(.footnote)
@@ -159,9 +159,9 @@ struct DetailView: View {
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
                 //                        .padding(.vertical, 10) // 设置上下边距
@@ -174,7 +174,7 @@ struct DetailView: View {
                         HStack {
                             Text("当月总收入：")
                                 .font(.subheadline)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                             Text("¥ " + detailStore.flowListDto.totalIn)
                                 .font(.headline)
                                 .foregroundColor(.green)
@@ -185,7 +185,7 @@ struct DetailView: View {
                         HStack{
                             Text("本年总支出：")
                                 .font(.subheadline)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                             Text("¥ " + detailStore.flowListDto.totalOut)
                                 .font(.headline)
                                 .foregroundColor(.red)
@@ -194,10 +194,10 @@ struct DetailView: View {
                         HStack{
                             Text("本年结余：")
                                 .font(.subheadline)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                             Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
                                 .font(.headline)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                         }
                         
                     }
@@ -248,15 +248,15 @@ struct DetailView: View {
             // 账本概览
             HStack {
                 Text("账本概览")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.accentColor)
             }
             .frame(maxWidth: .infinity)
             //.padding(.horizontal, 10) // 设置左右边距
             .overlay(
                 HStack {
-                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                     Spacer()
-                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                 }
             )
             .padding()

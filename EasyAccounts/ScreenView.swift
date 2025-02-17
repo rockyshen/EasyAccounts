@@ -24,22 +24,20 @@ struct ScreenView: View {
             // Header
             HStack {
                 Text("备注筛选")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.accentColor)
                 Spacer()
                 Text("筛选")
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.blackDarkMode)
                 Spacer()
                 Button(action: {
                     // Add functionality for more button
                 }) {
                     Text("更多条件")
-                        .foregroundColor(.blue)
+                        .foregroundColor(.accentColor)
                 }
             }
             .padding()
-//                .background(Color.white)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
             
             // Search bar
             HStack {
@@ -53,18 +51,20 @@ struct ScreenView: View {
             }
             .padding()
             
+            Text("暂未开发，请勿使用").bold().font(.title).padding(.bottom,10)
+            
             // Time period selection
             VStack(alignment: .leading) {
                 HStack {
-                    Text("快速切换").foregroundColor(.blue)
+                    Text("快速切换").foregroundColor(.accentColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
 //                .padding(.vertical, 10) // 设置上下边距
@@ -80,7 +80,7 @@ struct ScreenView: View {
                             Image(systemName: range == self.selectedDateRange ? "checkmark.circle.fill" : "circle")
                                 .font(.title2)
                             Text(range)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                         }
                         .frame(width: 80, height: 40)
                         .cornerRadius(20)
@@ -91,15 +91,15 @@ struct ScreenView: View {
             // Current period income and expenditure
             VStack(alignment: .leading) {
                 HStack {
-                    Text("当期收支情况").foregroundColor(.blue)
+                    Text("当期收支情况").foregroundColor(.accentColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
                 .padding(10) // 设置上下边距
@@ -107,7 +107,7 @@ struct ScreenView: View {
                 HStack {
                     Text("当期总收入")
                         .font(.subheadline)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blackDarkMode)
                     Text("¥300.00")
                         .font(.headline)
                         .foregroundColor(.green)
@@ -118,7 +118,7 @@ struct ScreenView: View {
                         // Add functionality for view details button
                     }) {
                         Text("查看分类明细")
-                            .foregroundColor(.blue)
+                            .foregroundColor(.accentColor)
                             .padding(.horizontal,10)
                     }
                 }.padding(.horizontal,10)
@@ -126,7 +126,7 @@ struct ScreenView: View {
                 HStack {
                     Text("本年结余：¥267.00")
                         .font(.subheadline)
-                        .foregroundColor(.black)
+                        .foregroundColor(.blackDarkMode)
                 }
                 .padding(.horizontal,10)
             }
@@ -135,15 +135,15 @@ struct ScreenView: View {
             // Current bill overview
             VStack(alignment: .leading) {
                 HStack {
-                    Text("当期账单概览").foregroundColor(.blue)
+                    Text("当期账单概览").foregroundColor(.accentColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
 //                .padding(.vertical, 10) // 设置上下边距

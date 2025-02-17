@@ -16,7 +16,6 @@ struct OverView: View {
             HStack {
                 Text("总览")
                     .font(.largeTitle)
-                    .foregroundColor(.white)
                 Spacer()
                 HStack {
                     Button(action: {
@@ -24,39 +23,41 @@ struct OverView: View {
                     }) {
                         Text("财务分析")
                             .font(.subheadline)
-                            .foregroundColor(.white)
+                            
                     }
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.accentColor)
                     .cornerRadius(8)
                 }
             }
             .padding()
-            .background(Color.blue)
+            .background(Color.accentColor)
+            .foregroundColor(.white)
             
             // Total assets
             VStack(alignment: .leading) {
                 Text("总资产")
                     .font(.footnote)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.greyDarkMode)
                 Text("¥\(homeStore.homeDto.totalAsset)")
                     .font(.largeTitle)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color.blackDarkMode)
             }
             .padding()
+
             
             // Income and expenditure
             VStack(alignment: .leading) {
                 HStack {
-                    Text("当年收支情况").foregroundColor(.blue)
+                    Text("当年收支情况").foregroundColor(.accentColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
                 .padding(.vertical, 10) // 设置上下边距
@@ -65,7 +66,7 @@ struct OverView: View {
                     HStack {
                         Text("本年总收入：")
                             .font(.subheadline)
-                            .foregroundColor(.black)
+                            .foregroundColor(.blackDarkMode)
                         Text("¥\(homeStore.homeDto.yearIncome)")
                             .font(.headline)
                             .foregroundColor(.green)
@@ -74,7 +75,7 @@ struct OverView: View {
                     HStack {
                         Text("本年总支出：")
                             .font(.subheadline)
-                            .foregroundColor(.black)
+                            .foregroundColor(.blackDarkMode)
                         Text("¥\(homeStore.homeDto.yearOutCome)")
                             .font(.headline)
                             .foregroundColor(.red)
@@ -83,10 +84,10 @@ struct OverView: View {
                     HStack {
                         Text("本年结余：")
                             .font(.subheadline)
-                            .foregroundColor(.black)
+                            .foregroundColor(.blackDarkMode)
                         Text("¥\(homeStore.homeDto.yearBalance)")
                             .font(.headline)
-                            .foregroundColor(.black)
+                            .foregroundColor(.blackDarkMode)
                     }
                 }
             }
@@ -95,15 +96,15 @@ struct OverView: View {
             // Account assets
             VStack(alignment: .leading) {
                 HStack {
-                    Text("账户资产").foregroundColor(.blue)
+                    Text("账户资产").foregroundColor(.accentColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 10) // 设置左右边距
                 .overlay(
                     HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 左侧横线
                         Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
                 .padding(.vertical, 5) // 设置上下边距
@@ -114,11 +115,11 @@ struct OverView: View {
                         HStack {
                             Text(account.accountName)
                                 .font(.headline)
-                                .foregroundColor(.black)
+                                .foregroundColor(.blackDarkMode)
                             Spacer()
                             Text("¥\(account.accountAsset)")
                                 .font(.title3)
-                                .foregroundColor(.blue)
+                                .foregroundColor(.accentColor)
                         }
                     }
                 }

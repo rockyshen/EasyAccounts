@@ -32,7 +32,6 @@ struct SettingActionView: View {
                             .foregroundColor(.gray)
                         // TODO 暂不开放修改Action的功能，用默认就够用了！
                     }
-                    .background(Color.white)
                     .cornerRadius(8)
                     .padding(.bottom, 15)
                 }
