@@ -1,7 +1,7 @@
 //
 //  SettingView.swift
 //  EasyAccounts
-//
+//  设置页
 //  Created by 沈俊杰 on 2025/2/2.
 //
 

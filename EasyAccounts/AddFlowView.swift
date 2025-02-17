@@ -112,7 +112,7 @@ struct AddFlowView: View {
                     Spacer()
                 }
             }
-            .navigationTitle("新增账单")
+            .navigationTitle("更新流水")
         }
     }
 }

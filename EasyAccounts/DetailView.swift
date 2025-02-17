@@ -1,7 +1,7 @@
 //
 //  Flow.swift
 //  EasyAccounts
-//  第2个Tab页：流水页，我取名为：DetailView，区别于FlowView
+//  流水页，我取名为：DetailView，区别于FlowView
 //  FlowView是单条Flow展示的页面！
 //  Created by 沈俊杰 on 2025/2/2.
 //
@@ -42,217 +42,12 @@ struct DetailView: View {
         self._month = State(initialValue: calendar.component(.month, from: currentDate))
     }
     
-    var body: some View {
-        VStack(alignment: .leading) {
-            // 顶部
-            HStack {
-                Text("流水")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                Spacer()
-                
-                VStack {
-                    Button(action: {
-                        isShowingAddFlowView.toggle()
-                    }, label : {
-                        Text("记一笔")
-                            .font(.subheadline)
-                            .foregroundColor(.white)
-                    })
-                    .padding()
-                    .sheet(isPresented: $isShowingAddFlowView, content: {
-                        AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
-                    })
-                    
-                    Button(action: {
-                        // 弹出图片选择器
-                        showImagePicker.toggle()
-                    }, label : {
-                        Text("AI识别")
-                            .font(.subheadline)
-                            .foregroundColor(.white)
-                    })
-                    .sheet(isPresented: $showImagePicker){
-                        ImagePickerView(sourceType: .photoLibrary){
-                            image in self.image = image
-                            self.isLoading = true
-                            detailStore.analyzeFlowByAi(flowImg: image) {
-                                responseMsg in self.isLoading = false
-                                self.responseMessage = responseMsg
-                            }
-                        }
-                    }
-                    
-                    if isLoading {
-                        ProgressView("AI正在识别。。。")
-                    }
-                    
-                    if let message = responseMessage {
-                        Text(message)
-                            .padding()
-                            .foregroundColor(message == "添加成功" ? .green : .red)
-                    }
-                }
-            }
-            .padding()
-            .background(Color.blue)
-            
-            // 总览 - 按时间排序
-            HStack {
-                Button(action: {
-                    // 总览按钮的功能
-                }) {
-                    Text("总览")
-                        .font(.title3) // 设置字体大小
-                        .foregroundColor(.black) // 设置字体颜色
-                    Image(systemName: "arrowtriangle.down.fill")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
-                        .opacity(0.5)
-                }
-            
-                Spacer()
-                
-                Button(action: {
-                    // 按时间排序按钮的功能
-                }) {
-                    Text("按时间排序")
-                        .font(.title3)
-                        .foregroundColor(.black)
-                    Image(systemName: "arrowtriangle.down.fill")
-                        .foregroundColor(.gray)
-                        .font(.footnote)
-                        .opacity(0.5)
-                }
-            }
-            .padding(.horizontal, 25)
-            .padding(.vertical,10)
-            
-            // 月度收支情况
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("月度收支情况").foregroundColor(.blue)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, 10) // 设置左右边距
-                .overlay(
-                    HStack {
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
-                        Spacer()
-                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
-                    }
-                )
-//                        .padding(.vertical, 10) // 设置上下边距
-            }
-            .padding(.horizontal, 10)
-            HStack{
-                VStack(alignment: .leading) {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("当月总收入：")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                            Text("¥ " + detailStore.flowListDto.totalIn)
-                                .font(.headline)
-                                .foregroundColor(.green)
-                            
-                            Spacer()
-                        }
-                            
-                        HStack{
-                            Text("本年总支出：")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                            Text("¥ " + detailStore.flowListDto.totalOut)
-                                .font(.headline)
-                                .foregroundColor(.red)
-                        }
-
-                        HStack{
-                            Text("本年结余：")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
-                            Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
-                                .font(.headline)
-                                .foregroundColor(.black)
-                        }
-                    
-                    }
-                    .padding(.horizontal,10)
-                }
-                
-                VStack(spacing: 10) {
-                    // 月份选择器
-                    HStack {
-                        Button(action: decrementMonth) {
-                            Text("-")
-                                .font(.largeTitle)
-//                                .padding()
-                        }
-                        
-                        Text("\(year) - \(String(format: "%02d", month))")
-                            .font(.headline)
-                            .frame(maxWidth: 90, maxHeight: 5)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .cornerRadius(8)
-                            .foregroundColor(.white)
-                        
-                        Button(action: incrementMonth) {
-                            Text("+")
-                                .font(.largeTitle)
-//                                .padding()
-                        }
-                    }
-                    
-                    Button(action: {
-                        // 在这里添加生成报表的逻辑
-                        print("报表已生成")
-                        detailStore.makeExcel()
-                    }) {
-                        Text("生成报表")
-                            .frame(maxWidth: 90, maxHeight: 5) // 使文本自适应按钮大小
-                            .padding() // 添加内边距
-                            .background(Color.blue.opacity(0.8)) // 设置背景颜色和透明度
-                            .cornerRadius(8) // 设置圆角半径
-                            .foregroundColor(.white) // 设置文本颜色
-                    }
-//                    .padding(.vertical,8)
-                }
-                .padding(.trailing,10)
-            }
-            
-            // 账本概览
-            HStack {
-                Text("账本概览")
-                    .foregroundColor(.blue)
-            }
-            .frame(maxWidth: .infinity)
-            //.padding(.horizontal, 10) // 设置左右边距
-            .overlay(
-                HStack {
-                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
-                    Spacer()
-                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
-                }
-            )
-            .padding()
-            VStack(alignment: .leading) {
-                FlowList(flows: detailStore.flowListDto.flows, detailStore: detailStore,
-                    accountStore: accountStore,
-                    actionStore: actionStore,
-                    typeStore: typeStore
-                )
-            }
-        }
-    }
-    
     // 月份选择器，计算月份加减的方法
     private func updateSelectedDate() {
-            if let newDate = Calendar.current.date(from: DateComponents(year: year, month: month)) {
-                selectedDate = newDate
-            }
+        if let newDate = Calendar.current.date(from: DateComponents(year: year, month: month)) {
+            selectedDate = newDate
         }
+    }
     
     private func incrementMonth() {
         month += 1
@@ -270,6 +65,210 @@ struct DetailView: View {
             year -= 1
         }
         updateSelectedDate()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            // 顶部
+            HStack {
+                Text("流水")
+                    .font(.largeTitle)
+                    .foregroundColor(.white)
+                Spacer()
+                
+                Menu {
+                    // 手动录入：记一笔
+                    Button(action: {
+                        isShowingAddFlowView.toggle()
+                    }, label : {
+                        Text("记一笔")
+                    })
+                    
+                    // 上传图片：AI识别
+                    Button(action: {
+                        // 弹出图片选择器
+                        showImagePicker.toggle()
+                    }, label : {
+                        Text("AI识别")
+                    })
+                } label: {Image(systemName: "plus")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white)
+                    .padding(10)
+                    .background(Circle().fill(Color.blue))
+                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                    }
+            }
+            .padding()
+            .background(Color.blue)
+            
+            // 弹出：修改Flow详情页
+            .sheet(isPresented: $isShowingAddFlowView, content: {
+                AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
+            })
+            
+            // 弹出：图片选择页
+            .sheet(isPresented: $showImagePicker){
+                ImagePickerView(sourceType: .photoLibrary){
+                    image in self.image = image
+                    self.isLoading = true
+                    detailStore.analyzeFlowByAi(flowImg: image) {
+                        responseMsg in self.isLoading = false
+                        self.responseMessage = responseMsg
+                    }
+                }
+            }
+                
+            // 总览 - 按时间排序
+            HStack {
+                Button(action: {
+                    // 总览按钮的功能
+                }) {
+                    Text("总览")
+                        .font(.title3) // 设置字体大小
+                        .foregroundColor(.black) // 设置字体颜色
+                    Image(systemName: "arrowtriangle.down.fill")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                        .opacity(0.5)
+                }
+                
+                Spacer()
+                
+                Button(action: {
+                    // 按时间排序按钮的功能
+                }) {
+                    Text("按时间排序")
+                        .font(.title3)
+                        .foregroundColor(.black)
+                    Image(systemName: "arrowtriangle.down.fill")
+                        .foregroundColor(.gray)
+                        .font(.footnote)
+                        .opacity(0.5)
+                }
+            }
+            .padding(.horizontal, 25)
+            .padding(.vertical,10)
+                
+            // 月度收支情况
+            VStack(alignment: .leading) {
+                HStack {
+                    Text("月度收支情况").foregroundColor(.blue)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 10) // 设置左右边距
+                .overlay(
+                    HStack {
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                        Spacer()
+                        Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                    }
+                )
+                //                        .padding(.vertical, 10) // 设置上下边距
+            }
+            .padding(.horizontal, 10)
+            
+            HStack{
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("当月总收入：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + detailStore.flowListDto.totalIn)
+                                .font(.headline)
+                                .foregroundColor(.green)
+                            
+                            Spacer()
+                        }
+                        
+                        HStack{
+                            Text("本年总支出：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + detailStore.flowListDto.totalOut)
+                                .font(.headline)
+                                .foregroundColor(.red)
+                        }
+                        
+                        HStack{
+                            Text("本年结余：")
+                                .font(.subheadline)
+                                .foregroundColor(.black)
+                            Text("¥ " + (detailStore.flowListDto.totalEarn ?? "0"))
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        
+                    }
+                    .padding(.horizontal,10)
+                }
+                
+                VStack(spacing: 10) {
+                    // 月份选择器
+                    HStack {
+                        Button(action: decrementMonth) {
+                            Text("-")
+                                .font(.largeTitle)
+                            //                                .padding()
+                        }
+                        
+                        Text("\(year) - \(String(format: "%02d", month))")
+                            .font(.headline)
+                            .frame(maxWidth: 90, maxHeight: 5)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .cornerRadius(8)
+                            .foregroundColor(.white)
+                        
+                        Button(action: incrementMonth) {
+                            Text("+")
+                                .font(.largeTitle)
+                            //                                .padding()
+                        }
+                    }
+                    
+                    Button(action: {
+                        // 在这里添加生成报表的逻辑
+                        print("报表已生成")
+                        detailStore.makeExcel()
+                    }) {
+                        Text("生成报表")
+                            .frame(maxWidth: 90, maxHeight: 5) // 使文本自适应按钮大小
+                            .padding() // 添加内边距
+                            .background(Color.blue.opacity(0.8)) // 设置背景颜色和透明度
+                            .cornerRadius(8) // 设置圆角半径
+                            .foregroundColor(.white) // 设置文本颜色
+                    }
+                    //                    .padding(.vertical,8)
+                }
+                .padding(.trailing,10)
+            }
+                
+            // 账本概览
+            HStack {
+                Text("账本概览")
+                    .foregroundColor(.blue)
+            }
+            .frame(maxWidth: .infinity)
+            //.padding(.horizontal, 10) // 设置左右边距
+            .overlay(
+                HStack {
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 左侧横线
+                    Spacer()
+                    Rectangle().frame(width: 100, height: 1).foregroundColor(.blue) // 右侧横线
+                }
+            )
+            .padding()
+            
+            VStack(alignment: .leading) {
+                FlowList(flows: detailStore.flowListDto.flows, detailStore: detailStore,
+                         accountStore: accountStore,
+                         actionStore: actionStore,
+                         typeStore: typeStore
+                )
+            }
+        }
     }
 }
 
