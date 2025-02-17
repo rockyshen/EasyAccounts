@@ -11,6 +11,9 @@ import ImagePickerView
 
 struct DetailView: View {
     @StateObject var detailStore = DetailStore()
+    @StateObject var accountStore = AccountStore()
+    @StateObject var actionStore = ActionStore()
+    @StateObject var typeStore = TypeStore()
     
     @State private var date = Date() // 默认日期为当前日期
     @State private var showingDatePicker = false
@@ -235,7 +238,11 @@ struct DetailView: View {
             )
             .padding()
             VStack(alignment: .leading) {
-                FlowList(flows: detailStore.flowListDto.flows)
+                FlowList(flows: detailStore.flowListDto.flows, detailStore: detailStore,
+                    accountStore: accountStore,
+                    actionStore: actionStore,
+                    typeStore: typeStore
+                )
             }
         }
     }

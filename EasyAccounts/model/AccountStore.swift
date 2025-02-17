@@ -174,6 +174,7 @@ class AccountStore: ObservableObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             
         do {
+            // TODO 其实删除account不用把account这个实体类封装进来，只要一个accountId就可以了
             let jsonData = try JSONEncoder().encode(account)
             request.httpBody = jsonData
         } catch {
@@ -208,12 +209,32 @@ class AccountStore: ObservableObject {
                 // 在成功新增之后，更新本地数据
                 self.accountResponseDtoList.removeAll { $0.id == account.id }
                 
-                // 删除账户之后，同步触发更新HomeStore更新“总览页”
-                print("我在AccountStore中调用了HomeStore的loadData方法")
-                
+                // TODO 同步更新总览页的账户信息
             }
         }
         task.resume()
     }
+    
+    // 根据Account的名字，返回accountId
+    func getAccountIdByName(accountName: String) -> Int? {
+        // TODO 补充代码，基于accountName获取该accountName的accountId
+        for account in accountResponseDtoList {
+            if account.name == accountName {
+                return account.id
+            }
+        }
+        return nil
+    }
+    
+    // 根据Account的ID，返回accountName
+    func getAccountNameById(accountId: Int)-> String? {
+        for account in accountResponseDtoList {
+            if account.id == accountId {
+                return account.name
+            }
+        }
+        return nil
+    }
+    
     
 }

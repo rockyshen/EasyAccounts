@@ -12,7 +12,11 @@ struct ScreenView: View {
     @State private var selectedTimePeriod = "当月"
     @State private var selectedDateRange = "当月"
     
+    // TODO 是不是应该有父级视图传递，不能重复实例化store
     @StateObject var detailStore = DetailStore()
+    @StateObject var accountStore = AccountStore()
+    @StateObject var actionStore = ActionStore()
+    @StateObject var typeStore = TypeStore()
     
     var body: some View {
         VStack {
@@ -143,7 +147,11 @@ struct ScreenView: View {
                 )
 //                .padding(.vertical, 10) // 设置上下边距
                 
-                FlowList(flows: detailStore.flowListDto.flows)
+                FlowList(flows: detailStore.flowListDto.flows, detailStore: detailStore,
+                    accountStore: accountStore,
+                    actionStore: actionStore,
+                    typeStore: typeStore
+                )
             }
             .padding(10)
         }

@@ -233,4 +233,25 @@ class TypeStore: ObservableObject {
         }
         task.resume()
     }
+    
+    // 根据Type的名字，返回typeId
+    func getTypeIdByName(typeName: String) -> Int?{
+        // TODO 根据typeName,返回typeId
+        for type in typeListResponseDtoList {
+            if type.tname == typeName {
+                return type.id
+            }
+        }
+        return nil
+    }
+    
+    // 根据Type的Id，返回typeName
+    func getTypeNameById(typeId: Int) -> String?{
+        for type in typeListResponseDtoList {
+            if type.id == typeId {
+                return type.tname
+            }
+        }
+        return nil
+    }
 }

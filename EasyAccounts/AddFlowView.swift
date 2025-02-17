@@ -9,6 +9,7 @@ import SwiftUI
 
 struct AddFlowView: View {
     // 属性已经设置默认值了，就不用实例化时传递了
+    // TODO Picker: the selection "47" is invalid 
     @State var flowAddRequestDto: FlowAddRequestDto = .init(money: "", fDate: "", createDate: "", actionId: 16, accountId: 47, accountToId: 0, typeId: 93, isCollect: false, note: "")
     
     @Environment(\.dismiss) private var dismiss
@@ -22,6 +23,7 @@ struct AddFlowView: View {
         return formatter
     }()
     
+    // 回调函数
     let completion: (FlowAddRequestDto) -> Void
     
     @StateObject var actionStore = ActionStore()

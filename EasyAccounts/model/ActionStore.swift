@@ -29,4 +29,36 @@ class ActionStore: ObservableObject{
             .init(id: 21, hName: "收钱", exempt: true, handle: 0),
         ]
     }
+    
+    // 根据hName，返回actionId
+    func getActionIdByhame(hName: String) -> Int? {
+        for action in actions {
+            if action.hName == hName {
+                return action.id
+            }
+        }
+        return nil
+    }
+    
+    // 根据actionId，返回actionName
+    func getActionNameById(actionId: Int) -> String? {
+        for action in actions {
+            if action.id == actionId {
+                return action.hName
+            }
+        }
+        return nil
+    }
+    
+    // 根据actionId，返回handle
+    func getHandleById(actionId: Int)->Int{
+        
+        return 0
+    }
+    
+    // 根据actionId,返回exempt
+    func getExemptById(actionId: Int)->Bool{
+        
+        return false
+    }
 }
