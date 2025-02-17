@@ -62,8 +62,7 @@ struct FlowList: View {
             
             // 编辑Flow的页面，复用AddFlowView
             AddFlowView(flowAddRequestDto: newFlowAddRequestDto) { newFlowAddRequestDto in
-                detailStore.updateFlow(flowId: flow.id,
-                                       flowAddRequestDto: newFlowAddRequestDto)
+                detailStore.updateFlow(flowId: flow.id, flowAddRequestDto: newFlowAddRequestDto)
             }
         })
         .alert(isPresented: $showingDeleteAlert) {

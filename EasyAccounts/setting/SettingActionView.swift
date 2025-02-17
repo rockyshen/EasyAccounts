@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingActionView: View {
-    @StateObject var actionStore = ActionStore()
+    var actionStore: ActionStore
     
     var body: some View {
         NavigationView {
@@ -54,5 +54,5 @@ struct SettingActionView: View {
 }
 
 #Preview {
-    SettingActionView()
+    SettingActionView(actionStore: ActionStore())
 }

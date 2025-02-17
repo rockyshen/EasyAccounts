@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct ScreenView: View {
-    @State private var is备注筛选Toggled = false
-    @State private var selectedTimePeriod = "当月"
-    @State private var selectedDateRange = "当月"
-    
-    // TODO 是不是应该有父级视图传递，不能重复实例化store
+    // TODO OverView、DetailView、ScreenView等四个Tab页
+    // 是不是应该由父级视图ContentView来传递Store，而不是在各自里面new对象
     @StateObject var detailStore = DetailStore()
     @StateObject var accountStore = AccountStore()
     @StateObject var actionStore = ActionStore()
     @StateObject var typeStore = TypeStore()
+    
+    @State private var is备注筛选Toggled = false
+    @State private var selectedTimePeriod = "当月"
+    @State private var selectedDateRange = "当月"
     
     var body: some View {
         VStack {

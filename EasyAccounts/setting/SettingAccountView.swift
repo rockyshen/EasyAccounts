@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingAccountView: View {
-    @StateObject var accountStore = AccountStore()
+    var accountStore: AccountStore
     
     @State var addNewAccount: AccountResponseDto?
     
@@ -42,5 +42,5 @@ struct SettingAccountView: View {
 }
 
 #Preview {
-    SettingAccountView()
+    SettingAccountView(accountStore: AccountStore())
 }

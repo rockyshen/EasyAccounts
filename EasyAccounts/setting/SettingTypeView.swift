@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingTypeView: View {
-    @StateObject var typeStore = TypeStore()
+    var typeStore: TypeStore
     
     @State var addNewType: TypeSingleDto?
     
