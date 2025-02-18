@@ -31,8 +31,9 @@ struct DetailView: View {
     @State var showImagePicker: Bool = false
     
     // AI识别，等待框
-    @State var isLoading: Bool = false
     @State var responseMessage: String?
+    @State var isLoading: Bool = false
+    @State private var showAlert = false
     
     // 初始化为系统当前年月
     init() {
@@ -101,24 +102,26 @@ struct DetailView: View {
             }
             .padding()
             .background(Color.blue)
-            
             // 弹出：修改Flow详情页
             .sheet(isPresented: $isShowingAddFlowView, content: {
                 AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
             })
-            
             // 弹出：图片选择页
-            .sheet(isPresented: $showImagePicker){
+            .sheet(isPresented: $showImagePicker, content: {
                 ImagePickerView(sourceType: .photoLibrary){
-                    image in self.image = image
+                    image in
+                    self.image = image
                     self.isLoading = true
+                    self.showAlert = true
                     detailStore.analyzeFlowByAi(flowImg: image) {
-                        responseMsg in self.isLoading = false
+                        responseMsg in
                         self.responseMessage = responseMsg
+                        self.isLoading = false
+                        self.showAlert = false
                     }
                 }
-            }
-                
+            })
+            
             // 总览 - 按时间排序
             HStack {
                 Button(action: {
@@ -164,7 +167,6 @@ struct DetailView: View {
                         Rectangle().frame(width: 100, height: 1).foregroundColor(.accentColor) // 右侧横线
                     }
                 )
-                //                        .padding(.vertical, 10) // 设置上下边距
             }
             .padding(.horizontal, 10)
             
@@ -240,7 +242,6 @@ struct DetailView: View {
                             .cornerRadius(8) // 设置圆角半径
                             .foregroundColor(.white) // 设置文本颜色
                     }
-                    //                    .padding(.vertical,8)
                 }
                 .padding(.trailing,10)
             }
@@ -269,6 +270,25 @@ struct DetailView: View {
                 )
             }
         }
+        //AI识别过程中，顶层的Alert弹窗
+        .overlay(
+            Group {
+                if showAlert {
+                    VStack {
+                        if isLoading {
+                            ProgressView("🤖️正在识别...")
+                                .foregroundColor(.blackDarkMode)
+                        } else {
+                            Text(responseMessage ?? "")
+                        }
+                    }
+                    .padding()
+                    .background(Color.whiteDarkMode.opacity(0.95))
+                    .cornerRadius(10)
+                    .transition(.opacity.animation(.easeInOut))
+                }
+            }
+        )
     }
 }
 

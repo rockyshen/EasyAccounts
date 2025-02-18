@@ -423,6 +423,12 @@ class DetailStore: ObservableObject {
             } else {
                 print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
             }
+            
+            // 更新published的属性
+            DispatchQueue.main.async {
+                // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
+                self.loadData()
+            }
         }
         
         // 启动任务
