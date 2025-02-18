@@ -5,7 +5,7 @@
 
 普通模式 与 深色模式                                  
 
-![](https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181202345.png)![](https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181244724.png)
+![](https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181202345.png)<img src="https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181244724.png" style="zoom: 77%;" />
 
 
 
