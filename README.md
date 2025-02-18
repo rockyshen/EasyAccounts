@@ -3,10 +3,6 @@
 ### 界面介绍
 主要分为四个Tab页：总览、流水、分析、设置。
 
-![](https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181202345.png)
-
-
-
 总览页截图：
 ![](https://picgo-rockyshen.oss-cn-shanghai.aliyuncs.com/picgo/202502181203792.png)
 
