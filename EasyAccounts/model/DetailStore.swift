@@ -174,10 +174,11 @@ class DetailStore: ObservableObject {
     }
     
     // 增：添加一条流水记录
-    // http://118.25.46.207:10670/flow/addFlow
+    // http://localhost:8085/flow/addFlow
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
         if let url = URL(string: "http://localhost:8085/flow/addFlow") {
 //        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
+            
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")

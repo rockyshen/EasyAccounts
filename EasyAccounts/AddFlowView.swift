@@ -74,7 +74,6 @@ struct AddFlowView: View {
                 
                 // iOS 16.0适用
                     .onChange(of: selectedDate) { selectedDate in
-//                        selectedDate = newDate
                         flowAddRequestDto.fDate = dateFormatter.string(from: selectedDate)
                     }
                 
