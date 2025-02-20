@@ -153,8 +153,8 @@ class DetailStore: ObservableObject {
     // TODO 为什么失效了呢？
     func loadData() {
         // 此处需要通过变量拼接URL 2025-01
-        let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
-//        let url = URL(string: "http://118.25.46.207:10670/flow/getFlowListMain/3/0/\(yearAndMonth)")!
+//        let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
+        let url = URL(string: "http://118.25.46.207:10670/flow/getFlowListMain/3/0/\(yearAndMonth)")!
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 print("No data received: \(error?.localizedDescription ?? "Unknown error")")
@@ -176,8 +176,8 @@ class DetailStore: ObservableObject {
     // 增：添加一条流水记录
     // http://localhost:8085/flow/addFlow
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
-        if let url = URL(string: "http://localhost:8085/flow/addFlow") {
-//        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
+//        if let url = URL(string: "http://localhost:8085/flow/addFlow") {
+        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
             
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -216,8 +216,8 @@ class DetailStore: ObservableObject {
         print("准备删除的flow的ID是")
         print(flowId)
         
-        guard let url = URL(string: "http://localhost:8085/flow/deleteFlow/\(flowId)") else {
-//        guard let url = URL(string: "http://118.25.46.207:10670/flow/deleteFlow/\(flowId)") else {
+//        guard let url = URL(string: "http://localhost:8085/flow/deleteFlow/\(flowId)") else {
+        guard let url = URL(string: "http://118.25.46.207:10670/flow/deleteFlow/\(flowId)") else {
                 print("Invalid URL")
                 return
             }
@@ -259,8 +259,8 @@ class DetailStore: ObservableObject {
         print(flowId)
         
         // URL for the API endpoint
-        guard let url = URL(string: "http://localhost:8085/flow/updateFlow/\(flowId)") else {
-//        guard let url = URL(string: "http://118.25.46.207:10670/flow/updateFlow/\(flowId)") else {
+//        guard let url = URL(string: "http://localhost:8085/flow/updateFlow/\(flowId)") else {
+        guard let url = URL(string: "http://118.25.46.207:10670/flow/updateFlow/\(flowId)") else {
             print("Invalid URL")
             return
         }
@@ -317,8 +317,8 @@ class DetailStore: ObservableObject {
     // 生成报表按钮
     // http://localhost:8085/flow/makeExcel/2025-02
     func makeExcel() {
-        let url = URL(string: "http://localhost:8085/flow/makeExcel/\(yearAndMonth)")!
-//        let url = URL(string: "http://118.25.46.207:10670/flow/makeExcel/\(yearAndMonth)")!
+//        let url = URL(string: "http://localhost:8085/flow/makeExcel/\(yearAndMonth)")!
+        let url = URL(string: "http://118.25.46.207:10670/flow/makeExcel/\(yearAndMonth)")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
@@ -363,8 +363,8 @@ class DetailStore: ObservableObject {
             }
         
         // 创建请求的 URL
-        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
-//        guard let url = URL(string: "http://118.25.46.207:10670/flow/analyzeFlowByAi") else {
+//        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
+        guard let url = URL(string: "http://118.25.46.207:10670/flow/analyzeFlowByAi") else {
             print("Invalid URL")
             return
         }
