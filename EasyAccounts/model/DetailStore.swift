@@ -341,104 +341,106 @@ class DetailStore: ObservableObject {
     // 调用后端AI识别账单，自动追加流水的能力
     // http://localhost:8085/flow/analyzeFlowByAi
     func analyzeFlowByAi(flowImg: UIImage, completion: @escaping (String) -> Void){
-        // 压缩图像以确保其小于 1MB，因为后端限制1MB，否则拒收
-        let maximumFileSize = 1048576 // 1MB
-        let compressionQuality: CGFloat = 1.0
-        var imageData: Data?
-        
-        // 尝试以不同的压缩比获取图片数据
-        for quality in stride(from: compressionQuality, through: 0, by: -0.1) {
-            if let compressedData = flowImg.jpegData(compressionQuality: quality) {
-                if compressedData.count < maximumFileSize {
-                    imageData = compressedData
-                    break
-                }
-            }
-        }
-        
-        // 将 UIImage 转换为 JPEG 数据
-        guard let jpegData = imageData else {
-                print("Failed to compress image within the size limit.")
-                return
-            }
-        
-        // 创建请求的 URL
-//        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
-        guard let url = URL(string: "http://118.25.46.207:10670/flow/analyzeFlowByAi") else {
-            print("Invalid URL")
-            return
-        }
-        
-        // 创建可变请求对象
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        
-        // 生成 boundary
-        let boundary = "Boundary-\(UUID().uuidString)"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        
-        // 构建 multipart/form-data 体
-        var body = Data()
-        let fileName = "image.jpg"
-        let mimeType = "image/jpeg"
-        
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
-        body.append(jpegData)
-        body.append("\r\n".data(using: .utf8)!)
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        request.httpBody = body
-        
-        // 创建 URLSession 数据任务
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            // 处理响应
-            if let error = error {
-                print("Error during request: \(error)")
-                return
-            }
+        DispatchQueue.global().async {
+            // 压缩图像以确保其小于 1MB，因为后端限制1MB，否则拒收
+            let maximumFileSize = 1048576 // 1MB
+            let compressionQuality: CGFloat = 1.0
+            var imageData: Data?
             
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("Invalid response")
-                return
-            }
-            
-            // 检查响应状态码
-            if (200...299).contains(httpResponse.statusCode) {
-                print("Image uploaded successfully!")
-                
-                // 如果服务器返回了 JSON 数据，可以在此处解析
-                if let responseData = data {
-                    // 解析服务器返回的数据
-                    do {
-                        if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
-                            print("Response JSON: \(json)")
-                            
-                            if let message = json["msg"], message as! String == "Success" {
-                                completion("添加成功")
-                            } else {
-                                completion("上传失败")
-                            }
-                        }
-
-                    } catch {
-                        print("Failed to parse JSON response: \(error)")
+            // 尝试以不同的压缩比获取图片数据
+            for quality in stride(from: compressionQuality, through: 0, by: -0.1) {
+                if let compressedData = flowImg.jpegData(compressionQuality: quality) {
+                    if compressedData.count < maximumFileSize {
+                        imageData = compressedData
+                        break
                     }
                 }
-            } else {
-                print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
             }
             
-            // 更新published的属性
-            DispatchQueue.main.async {
-                // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
-                self.loadData()
+            // 将 UIImage 转换为 JPEG 数据
+            guard let jpegData = imageData else {
+                    print("Failed to compress image within the size limit.")
+                    return
+                }
+            
+            // 创建请求的 URL
+    //        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
+            guard let url = URL(string: "http://118.25.46.207:10670/flow/analyzeFlowByAi") else {
+                print("Invalid URL")
+                return
             }
+            
+            // 创建可变请求对象
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            // 生成 boundary
+            let boundary = "Boundary-\(UUID().uuidString)"
+            request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+            
+            // 构建 multipart/form-data 体
+            var body = Data()
+            let fileName = "image.jpg"
+            let mimeType = "image/jpeg"
+            
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
+            body.append(jpegData)
+            body.append("\r\n".data(using: .utf8)!)
+            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+            
+            request.httpBody = body
+            
+            // 创建 URLSession 数据任务
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                // 处理响应
+                if let error = error {
+                    print("Error during request: \(error)")
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    print("Invalid response")
+                    return
+                }
+                
+                // 检查响应状态码
+                if (200...299).contains(httpResponse.statusCode) {
+                    print("Image uploaded successfully!")
+                    
+                    // 如果服务器返回了 JSON 数据，可以在此处解析
+                    if let responseData = data {
+                        // 解析服务器返回的数据
+                        do {
+                            if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
+                                print("Response JSON: \(json)")
+                                
+                                if let message = json["msg"], message as! String == "Success" {
+                                    completion("添加成功")
+                                } else {
+                                    completion("上传失败")
+                                }
+                            }
+
+                        } catch {
+                            print("Failed to parse JSON response: \(error)")
+                        }
+                    }
+                } else {
+                    print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
+                }
+                
+                // 更新published的属性
+                DispatchQueue.main.async {
+                    // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
+                    self.loadData()
+                }
+            }
+            // 启动任务
+            task.resume()
         }
         
-        // 启动任务
-        task.resume()
     }
     
 }

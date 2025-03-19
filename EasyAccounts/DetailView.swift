@@ -31,9 +31,11 @@ struct DetailView: View {
     @State var showImagePicker: Bool = false
     
     // AI识别，等待框
-    @State var responseMessage: String?
+    @State private var responseMessage = ""
     @State var isLoading: Bool = false
-    @State private var showAlert = false
+//    @State private var showAlert = false
+    @State private var showProcessingAlert = false
+    @State private var showCompletionAlert = false
     
     // 初始化为系统当前年月
     init() {
@@ -112,15 +114,25 @@ struct DetailView: View {
                     image in
                     self.image = image
                     self.isLoading = true
-                    self.showAlert = true
+                    self.responseMessage = "🤖️处理中..."
+                    self.showProcessingAlert = true
                     detailStore.analyzeFlowByAi(flowImg: image) {
                         responseMsg in
                         self.responseMessage = responseMsg
                         self.isLoading = false
-                        self.showAlert = false
+                        self.showProcessingAlert = false
+                        self.showCompletionAlert = true
                     }
                 }
             })
+            .alert(isPresented: $showCompletionAlert) {
+                Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
+                    // Reset image and state when alert is dismissed
+                    self.image = nil
+                    self.responseMessage = ""
+                })
+            }
+
             
             // 总览 - 按时间排序
             HStack {
@@ -273,10 +285,10 @@ struct DetailView: View {
         //AI识别过程中，顶层的Alert弹窗
         .overlay(
             Group {
-                if showAlert {
+                if showProcessingAlert {
                     VStack {
                         if isLoading {
-                            ProgressView("🤖️正在识别...")
+                            ProgressView(responseMessage)
                                 .foregroundColor(.blackDarkMode)
                         } else {
                             Text(responseMessage ?? "")
@@ -286,6 +298,13 @@ struct DetailView: View {
                     .background(Color.whiteDarkMode.opacity(0.95))
                     .cornerRadius(10)
                     .transition(.opacity.animation(.easeInOut))
+                    .onAppear {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            if self.isLoading {
+                                self.showProcessingAlert = false
+                            }
+                        }
+                    }
                 }
             }
         )
