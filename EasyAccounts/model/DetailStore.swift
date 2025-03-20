@@ -417,9 +417,9 @@ class DetailStore: ObservableObject {
                                 print("Response JSON: \(json)")
                                 
                                 if let message = json["msg"], message as! String == "Success" {
-                                    completion("添加成功")
+                                    completion("👍添加成功")
                                 } else {
-                                    completion("上传失败")
+                                    completion("😭上传失败")
                                 }
                             }
 

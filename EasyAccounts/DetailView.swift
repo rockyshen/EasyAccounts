@@ -125,13 +125,7 @@ struct DetailView: View {
                     }
                 }
             })
-            .alert(isPresented: $showCompletionAlert) {
-                Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
-                    // Reset image and state when alert is dismissed
-                    self.image = nil
-                    self.responseMessage = ""
-                })
-            }
+
 
             
             // 总览 - 按时间排序
@@ -290,12 +284,10 @@ struct DetailView: View {
                         if isLoading {
                             ProgressView(responseMessage)
                                 .foregroundColor(.blackDarkMode)
-                        } else {
-                            Text(responseMessage ?? "")
                         }
                     }
                     .padding()
-                    .background(Color.whiteDarkMode.opacity(0.95))
+                    .background(Color.whiteDarkMode)
                     .cornerRadius(10)
                     .transition(.opacity.animation(.easeInOut))
                     .onAppear {
@@ -308,6 +300,13 @@ struct DetailView: View {
                 }
             }
         )
+        .alert(isPresented: $showCompletionAlert) {
+            Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
+                // Reset image and state when alert is dismissed
+                self.image = nil
+                self.responseMessage = ""
+            })
+        }
     }
 }
 
