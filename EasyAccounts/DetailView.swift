@@ -125,9 +125,14 @@ struct DetailView: View {
                     }
                 }
             })
+            .alert(isPresented: $showCompletionAlert) {
+                Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
+                    // Reset image and state when alert is dismissed
+                    self.image = nil
+                    self.responseMessage = ""
+                })
+            }
 
-
-            
             // 总览 - 按时间排序
             HStack {
                 Button(action: {
@@ -300,13 +305,6 @@ struct DetailView: View {
                 }
             }
         )
-        .alert(isPresented: $showCompletionAlert) {
-            Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
-                // Reset image and state when alert is dismissed
-                self.image = nil
-                self.responseMessage = ""
-            })
-        }
     }
 }
 
