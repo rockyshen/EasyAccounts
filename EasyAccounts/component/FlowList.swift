@@ -44,6 +44,7 @@ struct FlowList: View {
                     }
             }
         }
+        .background(Color.whiteDarkMode)
         .listStyle(PlainListStyle())
         .sheet(item: $editingFlow, content: {flow in
             // FlowListSingleDto ==>  FlowAddRequestDto
@@ -52,7 +53,7 @@ struct FlowList: View {
                     money: flow.money,
                     fDate: flow.fdate,
                     createDate: "",      // 默认为空
-                    actionId: actionStore.getActionIdByhame(hName: flow.hname) ?? 0 ,
+                    actionId: actionStore.getActionIdByhame(hname: flow.hname) ?? 0 ,
                     accountId: accountStore.getAccountIdByName(accountName: flow.aname) ?? 0,
                     accountToId: 0,      // 内部转账id,默认是0
                     typeId: typeStore.getTypeIdByName(typeName: flow.tname) ?? 0,
@@ -72,6 +73,7 @@ struct FlowList: View {
                 primaryButton: .destructive(Text("删除")) {
                     // 调用DetailStore的delete方法
                     showingDeleteAlert = false
+                    print("选中的flow是：",selectedFlow)
                     detailStore.deleteFlow(flowId: selectedFlow!.id)
                 },
                 secondaryButton: .cancel() {

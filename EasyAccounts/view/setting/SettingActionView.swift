@@ -16,14 +16,14 @@ struct SettingActionView: View {
                 ForEach(actionStore.actions, id: \.id) { action in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text(action.hName)
+                            Text(action.hname)
                                 .font(.headline)
                             
                             Text("账户金额增加")
                                 .font(.subheadline)
                                 .foregroundColor(.white)
                                 .padding(5)
-                                .background((action.hName == "收入" || action.hName == "借入" || action.hName == "收钱") ? Color.green : ((action.hName == "支出" || action.hName == "还钱" || action.hName == "借出") ? Color.red : Color.blue))
+                                .background((action.hname == "收入" || action.hname == "借入" || action.hname == "收钱") ? Color.green : ((action.hname == "支出" || action.hname == "还钱" || action.hname == "借出") ? Color.red : Color.blue))
                                 .cornerRadius(5)
                         }
                         

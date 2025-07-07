@@ -42,43 +42,35 @@ struct AddFlowView: View {
                         .background(Color.white)
                         .cornerRadius(8)
                 }
-                
                 Picker("选择收支", selection: $flowAddRequestDto.actionId) {
                     ForEach(actionStore.actions, id: \.id) { action in
-                        Text(action.hName).tag(action.id)
+                        Text(action.hname).tag(action.id)
                     }
                 }
                 .pickerStyle(DefaultPickerStyle())
-                
                 Picker("选择账户", selection: $flowAddRequestDto.accountId) {
                     ForEach(accountStore.accountResponseDtoList, id: \.id) { account in
                         Text(account.name).tag(account.id)
                     }
                 }
                 .pickerStyle(DefaultPickerStyle())
-                
                 Picker("账单分类", selection: $flowAddRequestDto.typeId) {
                     ForEach(typeStore.typeListResponseDtoList, id: \.id) { type in
                         Text(type.tname).tag(type.id)
                     }
                 }
                 .pickerStyle(DefaultPickerStyle())
-                
-                
                 DatePicker("账单日期", selection: $selectedDate, displayedComponents: .date)
 // iOS 17.0以后适用
 //                    .onChange(of: selectedDate) { newDate, _ in
 //                        selectedDate = newDate
 //                        flowAddRequestDto.fDate = dateFormatter.string(from: newDate)
 //                    }
-                
                 // iOS 16.0适用
                     .onChange(of: selectedDate) { selectedDate in
                         flowAddRequestDto.fDate = dateFormatter.string(from: selectedDate)
                     }
-                
                 Toggle("是否收藏", isOn: $flowAddRequestDto.isCollect)
-                
                 HStack{
                     Text("备注").padding(.trailing, 30)
                     TextField("备注", text: $flowAddRequestDto.note)
@@ -87,7 +79,6 @@ struct AddFlowView: View {
                         .background(Color.white)
                         .cornerRadius(8)
                 }
-                
 //                Button("追加分账单") {
 //                    // 处理追加分账单逻辑
 //                }
@@ -95,7 +86,6 @@ struct AddFlowView: View {
 //                .background(Color.orange)
 //                .foregroundColor(.white)
 //                .cornerRadius(8)
-                
                 HStack{
                     Spacer()
                     Button("提交") {

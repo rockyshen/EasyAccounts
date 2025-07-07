@@ -15,15 +15,15 @@ struct FlowView: View {
             VStack(alignment: .leading) {
                 Text(flow.fdate)
                     .font(.subheadline)
-                    .foregroundColor(.blackDarkMode)
+                    .foregroundColor(Color.blackDarkMode)
                 
                 Text(flow.tname)
                     .font(.subheadline)
-                    .foregroundColor(.blackDarkMode)
+                    .foregroundColor(Color.blackDarkMode)
                 
                 Text(shortenText(flow.note, to: 20))
                     .font(.footnote)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color.blackDarkMode)
             }
             
             Spacer()
@@ -48,6 +48,10 @@ struct FlowView: View {
             }
             
         }
+//        .padding()
+        .frame(maxWidth: .infinity)                  // ✅ 撑满整行
+        .background(Color.whiteDarkMode)                    // （可选）避免 List 背景影响可见性
+        .contentShape(Rectangle())                  // ✅ 手势识别区域扩大
     }
     
     func shortenText(_ text: String, to length: Int) -> String {
