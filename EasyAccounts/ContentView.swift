@@ -18,8 +18,8 @@ struct ContentView: View {
 //        @StateObject var typeStore = TypeStore()
         
         TabView {
-            OverView()
-                .tabItem { Label("总览", systemImage: "house") }
+//            OverView()
+//                .tabItem { Label("总览", systemImage: "house") }
             
             DetailView()
                 .tabItem { Label("流水", systemImage: "square.and.pencil") }

@@ -153,32 +153,41 @@ class DetailStore: ObservableObject {
     // TODO 为什么失效了呢？
     func loadData() {
         // 此处需要通过变量拼接URL 2025-01
-//        let url = URL(string: "http://localhost:8085/flow/getFlowListMain/3/0/\(yearAndMonth)")!
-        let url = URL(string: "http://118.25.46.207:10670/flow/getFlowListMain/3/0/\(yearAndMonth)")!
+        let url = URL(string: "\(APIConfig.baseURL)/flow/getFlowListMain/3/0/\(yearAndMonth)")!
+        print("Final URL: \(url)")
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 print("No data received: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
-            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
-                    print("Unable to decode JSON data")
-                    return
+            print("data是：", data)
+            
+//            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
+//                    print("Unable to decode JSON data")
+//                    return
+//            }
+            
+            do {
+                let baseDto = try JSONDecoder().decode(DetailResponse.self, from: data)
+                DispatchQueue.main.async {
+                    self.flowListDto = baseDto.data
+                }
+            } catch {
+                print("JSON decode error: \(error)")
             }
-                        
+            
             // 被Published修饰的属性，必须在主线程上更新
-            DispatchQueue.main.async {
-                self.flowListDto = baseDto.data
-            }
+//            DispatchQueue.main.async {
+//                print(baseDto.data)
+//                self.flowListDto = baseDto.data
+//            }
         }.resume()
     }
     
     // 增：添加一条流水记录
-    // http://localhost:8085/flow/addFlow
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
-//        if let url = URL(string: "http://localhost:8085/flow/addFlow") {
-        if let url = URL(string: "http://118.25.46.207:10670/flow/addFlow") {
-            
+        if let url = URL(string: "\(APIConfig.baseURL)/flow/addFlow") {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -216,8 +225,7 @@ class DetailStore: ObservableObject {
         print("准备删除的flow的ID是")
         print(flowId)
         
-//        guard let url = URL(string: "http://localhost:8085/flow/deleteFlow/\(flowId)") else {
-        guard let url = URL(string: "http://118.25.46.207:10670/flow/deleteFlow/\(flowId)") else {
+        guard let url = URL(string: "\(APIConfig.baseURL)/flow/deleteFlow/\(flowId)") else {
                 print("Invalid URL")
                 return
             }
@@ -259,8 +267,7 @@ class DetailStore: ObservableObject {
         print(flowId)
         
         // URL for the API endpoint
-//        guard let url = URL(string: "http://localhost:8085/flow/updateFlow/\(flowId)") else {
-        guard let url = URL(string: "http://118.25.46.207:10670/flow/updateFlow/\(flowId)") else {
+        guard let url = URL(string: "\(APIConfig.baseURL)/flow/updateFlow/\(flowId)") else {
             print("Invalid URL")
             return
         }
@@ -316,31 +323,37 @@ class DetailStore: ObservableObject {
     
     // 生成报表按钮
     // http://localhost:8085/flow/makeExcel/2025-02
-    func makeExcel() {
-//        let url = URL(string: "http://localhost:8085/flow/makeExcel/\(yearAndMonth)")!
-        let url = URL(string: "http://118.25.46.207:10670/flow/makeExcel/\(yearAndMonth)")!
+    func makeExcel(completion: @escaping (Bool, String) -> Void) {
+        let url = URL(string: "\(APIConfig.baseURL)/flow/makeExcel/\(yearAndMonth)")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
-                print("No data received: \(error?.localizedDescription ?? "Unknown error")")
+                DispatchQueue.main.async {
+                    completion(false, "网络请求失败：\(error?.localizedDescription ?? "未知错误")")
+                }
                 return
             }
             
-            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
-                    print("Unable to decode JSON data")
-                    return
+            guard let response = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
+                DispatchQueue.main.async {
+                    completion(false, "响应解析失败")
+                }
+                return
             }
             
             DispatchQueue.main.async {
-                // 导出成功，就答应一下code
-                print(baseDto.code)
+                if response.code == 0 {
+                    completion(true, "✅ 报表生成成功，已发邮件")
+                } else {
+                    completion(false, "生成失败：\(response.msg)")
+                }
             }
         }.resume()
     }
     
     // 调用后端AI识别账单，自动追加流水的能力
     // http://localhost:8085/flow/analyzeFlowByAi
-    func analyzeFlowByAi(flowImg: UIImage, completion: @escaping (String) -> Void){
+    func uploadImageAndGetTaskId(flowImg: UIImage, completion: @escaping (String) -> Void){
         DispatchQueue.global().async {
             // 压缩图像以确保其小于 1MB，因为后端限制1MB，否则拒收
             let maximumFileSize = 1048576 // 1MB
@@ -359,13 +372,12 @@ class DetailStore: ObservableObject {
             
             // 将 UIImage 转换为 JPEG 数据
             guard let jpegData = imageData else {
-                    print("Failed to compress image within the size limit.")
-                    return
-                }
+                print("Failed to compress image within the size limit.")
+                return
+            }
             
             // 创建请求的 URL
-    //        guard let url = URL(string: "http://localhost:8085/flow/analyzeFlowByAi") else {
-            guard let url = URL(string: "http://118.25.46.207:10670/flow/analyzeFlowByAi") else {
+            guard let url = URL(string: "\(APIConfig.baseURL)/flow/analyzeFlowByAi") else {
                 print("Invalid URL")
                 return
             }
@@ -373,23 +385,17 @@ class DetailStore: ObservableObject {
             // 创建可变请求对象
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
-            
-            // 生成 boundary
             let boundary = "Boundary-\(UUID().uuidString)"
             request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            
-            // 构建 multipart/form-data 体
             var body = Data()
             let fileName = "image.jpg"
             let mimeType = "image/jpeg"
-            
             body.append("--\(boundary)\r\n".data(using: .utf8)!)
             body.append("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".data(using: .utf8)!)
             body.append("Content-Type: \(mimeType)\r\n\r\n".data(using: .utf8)!)
             body.append(jpegData)
             body.append("\r\n".data(using: .utf8)!)
             body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-            
             request.httpBody = body
             
             // 创建 URLSession 数据任务
@@ -411,36 +417,96 @@ class DetailStore: ObservableObject {
                     
                     // 如果服务器返回了 JSON 数据，可以在此处解析
                     if let responseData = data {
-                        // 解析服务器返回的数据
                         do {
-                            if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
-                                print("Response JSON: \(json)")
-                                
-                                if let message = json["msg"], message as! String == "Success" {
-                                    completion("👍添加成功")
-                                } else {
-                                    completion("😭上传失败")
-                                }
+                            if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any],
+                               let taskId = json["data"] as? String {
+                                completion(taskId)
+                            } else {
+                                print("Invalid response format.")
+                                completion("👍添加成功")
                             }
-
                         } catch {
-                            print("Failed to parse JSON response: \(error)")
+                            print("Failed to parse JSON. Error: \(error)")
+                            completion("😭上传失败")
                         }
                     }
-                } else {
-                    print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
-                }
-                
-                // 更新published的属性
-                DispatchQueue.main.async {
-                    // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
-                    self.loadData()
+                    else {
+                        print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
+                    }
+                    
+                    // 更新published的属性
+                    //                DispatchQueue.main.async {
+                    //                    // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
+                    //                    self.loadData()
+                    //                }
                 }
             }
-            // 启动任务
-            task.resume()
+                // 启动http请求任务
+                task.resume()
+            }
         }
         
+    // 基于上一步获得的task_id，获得执行情况，code=0表示已经完成解析并更新入数据库；如果code=500表示还未完成
+    // taskId有可能不传，证明没有AI分析任务，就是普通的刷新
+    func getAnalysisResult(taskId: String?, completion: @escaping (Bool, String) -> Void) {
+        // 如果没有taskId，说明没有AI任务，直接加载
+            guard let taskId = taskId, !taskId.isEmpty else {
+                print("无AI任务，直接加载数据")
+                completion(true, "直接加载，无AI任务")
+                return
+            }
+        
+        DispatchQueue.global().async {
+            guard let url = URL(string: "\(APIConfig.baseURL)/flow/getAnalyzeFlowByAiResult?taskId=\(taskId)") else {
+                print("Invalid URL")
+                completion(false, "😭 查询失败：无效URL")
+                return
+            }
+            print(url)
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error during request: \(error)")
+                    completion(false, "😭 网络请求失败")
+                    return
+                }
+                
+                guard let responseData = data else {
+                    completion(false, "😭 没有返回数据")
+                    return
+                }
+                
+                
+                do {
+                    // 测试返回结果
+                    if let rawString = String(data: responseData, encoding: .utf8) {
+                        print("原始响应字符串：\(rawString)")
+                    }
+                    
+                    if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any],
+                       let code = json["code"] as? Int {
+                        let msg = json["msg"] as? String ?? ""
+                        
+                        if code == 0 {
+                            completion(true, "解析完成")
+                            } else if code == 500 && msg == "数据已写入，无需重复操作" {
+                                completion(true, "已存在，直接加载")
+                            } else {
+                                completion(false, "解析未完成，请稍后再试")
+                            }
+                        } else {
+                        completion(false, "😭 解析JSON失败")
+                    }
+                } catch {
+                    print("JSON parse error: \(error)")
+                    completion(false, "😭 JSON解析异常")
+                }
+            }
+            task.resume()
+        }
     }
-    
+
 }
+    

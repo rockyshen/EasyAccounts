@@ -7,19 +7,21 @@
 
 import SwiftUI
 
+struct DeletableFlow: Identifiable {
+    let id = UUID()
+    let flow: FlowListSingleDto
+}
+
 struct FlowList: View {
     var flows: [FlowListSingleDto]
-    
     var detailStore: DetailStore
-    
     var accountStore: AccountStore
-    
     var actionStore: ActionStore
-    
     var typeStore: TypeStore
     
     // 编辑时，选中的对象
     @State var editingFlow: FlowListSingleDto?
+    @State private var deletableFlow: DeletableFlow?
     
     // 删除时，选中的对象
     @State private var selectedFlow: FlowListSingleDto?
@@ -31,9 +33,10 @@ struct FlowList: View {
                 FlowView(flow: flow)
                     .swipeActions(edge: .trailing){
                         Button("删除",role: .destructive){
-                            // TODO 实现删除这一条Flow的逻辑
-                            showingDeleteAlert.toggle()
-                            selectedFlow = flow
+//                            // TODO 实现删除这一条Flow的逻辑
+//                            showingDeleteAlert.toggle()
+//                            selectedFlow = flow
+                            deletableFlow = DeletableFlow(flow: flow)
                         }
                     }
                     .swipeActions(edge: .leading){
@@ -66,19 +69,29 @@ struct FlowList: View {
                 detailStore.updateFlow(flowId: flow.id, flowAddRequestDto: newFlowAddRequestDto)
             }
         })
-        .alert(isPresented: $showingDeleteAlert) {
+//        .alert(isPresented: $showingDeleteAlert) {
+//            Alert(
+//                title: Text("确认删除"),
+//                message: Text("您确定要删除这条流水吗？"),
+//                primaryButton: .destructive(Text("删除")) {
+//                    // 调用DetailStore的delete方法
+//                    showingDeleteAlert = false
+////                    print("选中的flow是：",selectedFlow)
+//                    detailStore.deleteFlow(flowId: selectedFlow!.id)
+//                },
+//                secondaryButton: .cancel() {
+//                    showingDeleteAlert = false
+//                }
+//            )
+//        }
+        .alert(item: $deletableFlow) { deletable in
             Alert(
                 title: Text("确认删除"),
                 message: Text("您确定要删除这条流水吗？"),
                 primaryButton: .destructive(Text("删除")) {
-                    // 调用DetailStore的delete方法
-                    showingDeleteAlert = false
-                    print("选中的flow是：",selectedFlow)
-                    detailStore.deleteFlow(flowId: selectedFlow!.id)
+                    detailStore.deleteFlow(flowId: deletable.flow.id)
                 },
-                secondaryButton: .cancel() {
-                    showingDeleteAlert = false
-                }
+                secondaryButton: .cancel()
             )
         }
     }

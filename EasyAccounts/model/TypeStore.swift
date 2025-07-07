@@ -23,6 +23,7 @@ struct TypeListResponseDto: Identifiable, Codable {
     var archive: Bool
     var action: Action?
     var tname: String
+    var analysisDisable: Bool?
 }
 
 // 更新单条分类的实体类，提供parent默认值，删除children
@@ -33,6 +34,7 @@ struct TypeSingleDto: Identifiable, Codable {
     var disable = false    // 逻辑删除 标记位
     var archive: Bool
     var actionId: Int?
+    var analysisDisable: Bool?
 }
 
 class TypeStore: ObservableObject {
@@ -50,14 +52,19 @@ class TypeStore: ObservableObject {
     
     // 向后端请求获取所有类别信息列表
     func loadTypes() {
-//        let url = URL(string: "http://localhost:8085/type/getType")!
-        let url = URL(string: "http://118.25.46.207:10670/type/getType")!
+        let url = URL(string: "\(APIConfig.baseURL)/type/getType")!
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 print("No data received: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
+            
+//            // 查看后端响应的数据结构
+//            if let raw = String(data: data, encoding: .utf8) {
+//                print("🚨 原始 JSON：\n\(raw)")
+//            }
+
             
             guard let baseDto = try? JSONDecoder().decode(TypeResponse.self, from: data) else {
                 print("Unable to decode JSON data")
@@ -74,8 +81,7 @@ class TypeStore: ObservableObject {
     
     // 更新Type
     func updateType(typeSingleDto: TypeSingleDto){
-//        guard let url = URL(string: "http://localhost:8085/type/updateType/\(typeSingleDto.id!)") else {
-        guard let url = URL(string: "http://118.25.46.207:10670/type/updateType/\(typeSingleDto.id!)") else {
+        guard let url = URL(string: "\(APIConfig.baseURL)/type/updateType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
                 return
             }
@@ -133,8 +139,7 @@ class TypeStore: ObservableObject {
     // 新增一个Type
     // http://localhost:8085/type/addType
     func addType(typeSingleDto: TypeSingleDto) {
-//        let url = URL(string: "http://localhost:8085/type/addType")!
-        let url = URL(string: "http://118.25.46.207:10670/type/addType")!
+        let url = URL(string: "\(APIConfig.baseURL)/type/addType")!
             
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -181,8 +186,7 @@ class TypeStore: ObservableObject {
     
     // 删除一个Type,基于id
     func deleteType(typeSingleDto: TypeSingleDto){
-//        guard let url = URL(string: "http://localhost:8085/type/deleteType/\(typeSingleDto.id!)") else {
-        guard let url = URL(string: "http://118.25.46.207:10670/type/deleteType/\(typeSingleDto.id!)") else {
+        guard let url = URL(string: "\(APIConfig.baseURL)/type/deleteType/\(typeSingleDto.id!)") else {
                 print("Invalid URL")
                 return
             }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6414DED22D8D537F00ACCDB8 /* StaticCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6414DED12D8D537F00ACCDB8 /* StaticCard.swift */; };
+		642DDFA62E17771A0035CF17 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642DDFA52E1777190035CF17 /* Config.swift */; };
 		64373EE92D59F3A3007072DC /* SettingActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EE82D59F3A3007072DC /* SettingActionView.swift */; };
 		64373EEB2D59F3CE007072DC /* SettingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEA2D59F3CE007072DC /* SettingAccountView.swift */; };
 		64373EED2D59F3EE007072DC /* SettingTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64373EEC2D59F3EE007072DC /* SettingTypeView.swift */; };
@@ -36,6 +38,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6414DED12D8D537F00ACCDB8 /* StaticCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCard.swift; sourceTree = "<group>"; };
+		642DDFA52E1777190035CF17 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		64373EE82D59F3A3007072DC /* SettingActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingActionView.swift; sourceTree = "<group>"; };
 		64373EEA2D59F3CE007072DC /* SettingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingAccountView.swift; sourceTree = "<group>"; };
 		64373EEC2D59F3EE007072DC /* SettingTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTypeView.swift; sourceTree = "<group>"; };
@@ -116,24 +120,14 @@
 			isa = PBXGroup;
 			children = (
 				646334A12D642BBA00D702A1 /* Info.plist */,
-				64373EFC2D5AF1D6007072DC /* edit */,
-				64373EE72D59F36E007072DC /* setting */,
+				64FEEB742E1ABA350078783A /* view */,
+				64FEEB732E1ABA080078783A /* component */,
 				64DA4E572D4FB6E700EE1521 /* model */,
 				64DA4E3F2D4E134900EE1521 /* EasyAccountsApp.swift */,
 				64DA4E412D4E134900EE1521 /* ContentView.swift */,
+				642DDFA52E1777190035CF17 /* Config.swift */,
 				64DA4E432D4E134B00EE1521 /* Assets.xcassets */,
 				64DA4E452D4E134B00EE1521 /* Preview Content */,
-				64DA4E4F2D4FABB700EE1521 /* OverView.swift */,
-				64DA4E512D4FB14900EE1521 /* DetailView.swift */,
-				64DA4E532D4FB34600EE1521 /* ScreenView.swift */,
-				64DA4E552D4FB38900EE1521 /* SettingView.swift */,
-				64DA4E5A2D524EA400EE1521 /* FlowList.swift */,
-				64DA4E5E2D52512400EE1521 /* FlowView.swift */,
-				64DA4E622D57A64400EE1521 /* AddFlowView.swift */,
-				64373EF22D5A48E6007072DC /* AccountView.swift */,
-				64373EF42D5A48FA007072DC /* AccountList.swift */,
-				64373EF82D5AE4E2007072DC /* TypeView.swift */,
-				64373EFA2D5AE5A0007072DC /* TypeList.swift */,
 			);
 			path = EasyAccounts;
 			sourceTree = "<group>";
@@ -156,6 +150,34 @@
 				64373EF62D5AE01D007072DC /* TypeStore.swift */,
 			);
 			path = model;
+			sourceTree = "<group>";
+		};
+		64FEEB732E1ABA080078783A /* component */ = {
+			isa = PBXGroup;
+			children = (
+				64DA4E5A2D524EA400EE1521 /* FlowList.swift */,
+				64DA4E5E2D52512400EE1521 /* FlowView.swift */,
+				64DA4E622D57A64400EE1521 /* AddFlowView.swift */,
+				64373EF22D5A48E6007072DC /* AccountView.swift */,
+				64373EF42D5A48FA007072DC /* AccountList.swift */,
+				64373EF82D5AE4E2007072DC /* TypeView.swift */,
+				64373EFA2D5AE5A0007072DC /* TypeList.swift */,
+				6414DED12D8D537F00ACCDB8 /* StaticCard.swift */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
+		64FEEB742E1ABA350078783A /* view */ = {
+			isa = PBXGroup;
+			children = (
+				64373EFC2D5AF1D6007072DC /* edit */,
+				64373EE72D59F36E007072DC /* setting */,
+				64DA4E4F2D4FABB700EE1521 /* OverView.swift */,
+				64DA4E512D4FB14900EE1521 /* DetailView.swift */,
+				64DA4E532D4FB34600EE1521 /* ScreenView.swift */,
+				64DA4E552D4FB38900EE1521 /* SettingView.swift */,
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,7 +268,9 @@
 				64373EF12D59FE95007072DC /* AccountStore.swift in Sources */,
 				64373EED2D59F3EE007072DC /* SettingTypeView.swift in Sources */,
 				64373EF92D5AE4E2007072DC /* TypeView.swift in Sources */,
+				642DDFA62E17771A0035CF17 /* Config.swift in Sources */,
 				64373EEB2D59F3CE007072DC /* SettingAccountView.swift in Sources */,
+				6414DED22D8D537F00ACCDB8 /* StaticCard.swift in Sources */,
 				64DA4E562D4FB38900EE1521 /* SettingView.swift in Sources */,
 				64DA4E632D57A64400EE1521 /* AddFlowView.swift in Sources */,
 				64DA4E5B2D524EA400EE1521 /* FlowList.swift in Sources */,

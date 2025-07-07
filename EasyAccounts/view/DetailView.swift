@@ -9,6 +9,11 @@
 import SwiftUI
 import ImagePickerView
 
+struct AlertMessage: Identifiable {
+    let id = UUID()
+    let message: String
+}
+
 struct DetailView: View {
     @StateObject var detailStore = DetailStore()
     @StateObject var accountStore = AccountStore()
@@ -39,6 +44,7 @@ struct DetailView: View {
     
     @State private var taskId: String = ""
     
+    @State private var alertMessage: AlertMessage?
     
     // 初始化为系统当前年月
     init() {
@@ -76,11 +82,6 @@ struct DetailView: View {
     var body: some View {
         NavigationView {
             VStack {
-//                HStack {
-//                    StaticCard(title: "每月支出", value: 189, icon: "basket")
-//                    StaticCard(title: "每月支出", value: 189, icon: "basket")
-//                }
-                
                 // FlowList
                 FlowList(flows: detailStore.flowListDto.flows, detailStore: detailStore,
                          accountStore: accountStore,
@@ -127,31 +128,48 @@ struct DetailView: View {
                     AddFlowView(completion: {newFlowAddRequestDto in detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)})
                 })
                 // 弹出：图片选择页
-                .sheet(isPresented: $showImagePicker, content: {
-                    ImagePickerView(sourceType: .photoLibrary){
-                        image in
+//                .sheet(isPresented: $showImagePicker, content: {
+//                    ImagePickerView(sourceType: .photoLibrary){
+//                        image in
+//                        self.image = image
+//                        self.isLoading = true
+//                        self.responseMessage = "🤖️处理中..."
+//                        self.showProcessingAlert = true
+//                        detailStore.uploadImageAndGetTaskId(flowImg: image) { taskId in
+//                            DispatchQueue.main.async {
+//                                self.taskId = taskId
+//                                self.isLoading = false
+//                                self.showProcessingAlert = false
+//                                self.responseMessage = "任务ID：\(taskId)"
+//                                self.showCompletionAlert = true
+//                            }
+//                        }
+//                    }
+//                })
+                .sheet(isPresented: $showImagePicker) {
+                    ImagePickerView(sourceType: .photoLibrary) { image in
                         self.image = image
                         self.isLoading = true
-                        self.responseMessage = "🤖️处理中..."
-                        self.showProcessingAlert = true
+                        alertMessage = AlertMessage(message: "🤖️处理中...")
+
                         detailStore.uploadImageAndGetTaskId(flowImg: image) { taskId in
                             DispatchQueue.main.async {
                                 self.taskId = taskId
                                 self.isLoading = false
-                                self.showProcessingAlert = false
-                                self.responseMessage = "任务ID：\(taskId)"
-                                self.showCompletionAlert = true
+                                alertMessage = AlertMessage(message: "任务ID：\(taskId)")
                             }
                         }
                     }
-                })
-                .alert(isPresented: $showCompletionAlert) {
-                    Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
-                        // Reset image and state when alert is dismissed
-                        self.image = nil
-                        self.responseMessage = ""
-                    })
                 }
+                // 这里如果注释掉，可以让FlowList的删除有提示
+                // 如果这里保留，FlowList的删除就会失效
+                // 因为isPresented只能在父子之间的一处使用。
+//                .alert(isPresented: $showCompletionAlert) {
+//                    Alert(title: Text("状态"), message: Text(responseMessage), dismissButton: .default(Text("好")) {
+//                        // Reset image and state when alert is dismissed
+//                        self.image = nil
+//                    })
+//                }
 //                .alert(isPresented: $showReportAlert) {
 //                    Alert(
 //                        title: Text("报表导出"),
@@ -168,14 +186,18 @@ struct DetailView: View {
                                 detailStore.loadData()
                             } else {
                                 // 未完成或失败，提示用户
-                                self.responseMessage = message
-                                self.showCompletionAlert = true
+//                                self.responseMessage = message
+//                                self.showCompletionAlert = true
+                                alertMessage = AlertMessage(message: message)
                             }
                             self.isLoading = false
                         }
                     }
                 }
             }
+        }
+        .alert(item: $alertMessage) { alert in
+            Alert(title: Text("提示"), message: Text(alert.message), dismissButton: .default(Text("好")))
         }
         
         //AI识别过程中，顶层的Alert弹窗
