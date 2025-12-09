@@ -8,13 +8,10 @@
 import SwiftUI
 
 struct TypeList: View {
-    var typeList: [TypeListResponseDto]
-    
     @State var editingType: TypeSingleDto?
     
-    // 不能重复实例化typeStore
-//    @StateObject var typeStore = TypeStore()
-    var typeStore: TypeStore
+    // 使用 @ObservedObject 确保数据更新时视图自动刷新
+    @ObservedObject var typeStore: TypeStore
     
     // 待删除的Type
     @State private var showingDeleteAlert = false
@@ -22,7 +19,7 @@ struct TypeList: View {
     
     var body: some View {
         List {
-            ForEach(typeList) {type in
+            ForEach(typeStore.typeListResponseDtoList) {type in
                 TypeView(typeListResponseDto: type)
                     .swipeActions(edge: .trailing){
                         Button("删除",role: .destructive){
@@ -43,6 +40,9 @@ struct TypeList: View {
             }
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            typeStore.loadTypes()
+        }
         .sheet(item: $editingType, content: {type in
             TypeEditView(
                 type: type,
@@ -70,7 +70,5 @@ struct TypeList: View {
 }
 
 #Preview {
-    TypeList(typeList: [
-        TypeListResponseDto(id: 1, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试"),
-        TypeListResponseDto(id: 2, parent: -1, childrenTypes: [], disable: false, hasChild: false, archive:false, action: nil, tname: "测试2")], typeStore: TypeStore())
+    TypeList(typeStore: TypeStore())
 }

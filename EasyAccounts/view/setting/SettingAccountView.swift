@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct SettingAccountView: View {
-    var accountStore: AccountStore
+    @ObservedObject var accountStore: AccountStore
     
     @State var addNewAccount: AccountResponseDto?
     
     var body: some View {
         NavigationView {
-            AccountList(accountStore: accountStore, accounts: accountStore.accountResponseDtoList)
+            AccountList(accountStore: accountStore)
             .padding(15)
             .navigationTitle("账户")
             .navigationBarTitleDisplayMode(.inline)

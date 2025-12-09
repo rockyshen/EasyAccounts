@@ -24,7 +24,7 @@ struct AccountResponseDto: Identifiable, Codable {
 }
 
 class AccountStore: ObservableObject {
-    @Published var accountResponseDtoList = [AccountResponseDto(id: 0, name: "测试账户", money: "100", exemptMoney: "0", card: "0000-1111-2222-3333", note: "📝备注：测试账户")]
+    @Published var accountResponseDtoList = [AccountResponseDto(id: 1, name: "测试账户", money: "100", exemptMoney: "0", card: "0000-1111-2222-3333", note: "📝备注：测试账户")]
     
     init(){
         loadAccounts()
@@ -110,8 +110,7 @@ class AccountStore: ObservableObject {
     
     // 增加一个新账户
     func addAccount(account: AccountResponseDto){
-        let url = URL(string: "http://localhost:8085/account/addAccount")!
-//        let url = URL(string: "http://118.25.46.207:10670/account/addAccount")!
+        let url = URL(string: "\(APIConfig.baseURL)/account/addAccount")!
             
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -127,30 +126,30 @@ class AccountStore: ObservableObject {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Error with request: \(error)")
+                print("❌ Error with request: \(error)")
                 return
             }
             
-            guard let httpResponse = response as? HTTPURLResponse,
-                  (200...299).contains(httpResponse.statusCode) else {
-                print("Server error")
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("❌ Invalid response")
                 return
             }
             
-            if let mimeType = response?.mimeType, mimeType == "application/json",
-               let data = data {
-                do {
-                    let jsonResponse = try JSONDecoder().decode(AccountResponseDto.self, from: data)
-                    print("JSON: \(jsonResponse)")
-                } catch {
-                    print("Error parsing JSON: \(error)")
-                }
+            print("📡 Response status code: \(httpResponse.statusCode)")
+            
+            // 打印响应体便于调试
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("📄 Response body: \(responseString)")
+            }
+            
+            guard (200...299).contains(httpResponse.statusCode) else {
+                print("❌ Server error with status code: \(httpResponse.statusCode)")
+                return
             }
             
             // 更新published的属性
             DispatchQueue.main.async {
-                // 在成功新增之后，通过网络再请求一次loadAccounts()，本地更新不行，因为没有id
-                // addAccount向后端传递的时候，id还没有生成，是nil（且后端响应也没有响应受影响的id或实体类，这是不对的，我去修改后端响应）
+                // 在成功新增之后，通过网络再请求一次loadAccounts()
                 self.loadAccounts()
             }
         }
@@ -194,7 +193,7 @@ class AccountStore: ObservableObject {
             if let mimeType = response?.mimeType, mimeType == "application/json",
                let data = data {
                 do {
-                    let jsonResponse = try JSONDecoder().decode(TypeResponse.self, from: data)
+                    let jsonResponse = try JSONDecoder().decode(AccountResponse.self, from: data)
                     print("JSON: \(jsonResponse)")
                 } catch {
                     print("Error parsing JSON: \(error)")
@@ -203,7 +202,7 @@ class AccountStore: ObservableObject {
             
             // 更新published的属性
             DispatchQueue.main.async {
-                // 在成功新增之后，更新本地数据
+                // 在成功删除之后，更新本地数据
                 self.accountResponseDtoList.removeAll { $0.id == account.id }
                 
                 // TODO 同步更新总览页的账户信息

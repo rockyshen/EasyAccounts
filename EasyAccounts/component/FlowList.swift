@@ -58,9 +58,9 @@ struct FlowList: View {
                     createDate: "",      // 默认为空
                     actionId: actionStore.getActionIdByhame(hname: flow.hname) ?? 0 ,
                     accountId: accountStore.getAccountIdByName(accountName: flow.aname) ?? 0,
-                    accountToId: 0,      // 内部转账id,默认是0
+                    accountToId: 0,      // 非转账时为0
                     typeId: typeStore.getTypeIdByName(typeName: flow.tname) ?? 0,
-                    isCollect: flow.collect,              // 直接使用
+                    isCollect: flow.collect,            // 直接使用
                     note: flow.note                       // 直接使用
                 )
             

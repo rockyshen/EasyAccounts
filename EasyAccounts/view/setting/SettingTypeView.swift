@@ -8,16 +8,13 @@
 import SwiftUI
 
 struct SettingTypeView: View {
-    var typeStore: TypeStore
+    @ObservedObject var typeStore: TypeStore
     
     @State var addNewType: TypeSingleDto?
     
     var body: some View {
         NavigationView {
-            TypeList(
-                typeList: typeStore.typeListResponseDtoList,
-                typeStore: typeStore
-            )
+            TypeList(typeStore: typeStore)
             .padding(15)
             .navigationTitle("分类")
             .navigationBarTitleDisplayMode(.inline)

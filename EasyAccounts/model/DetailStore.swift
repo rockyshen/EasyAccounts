@@ -46,16 +46,16 @@ struct FlowTypeDto: Codable {
     var children: [FlowTypeDto]
 }
 
-// addFlow时，请求体
+// addFlow时，请求体（与后端响应格式一致）
 struct FlowAddRequestDto: Codable {
-    var money: String      // 账单金额
-    var fDate: String      // 账单日期（手动选择）
+    var money: String       // 账单金额
+    var fDate: String       // 账单日期（手动选择）
     var createDate: String  // 系统生成的日期
     var actionId: Int       // 收入 or 支出
     var accountId: Int      // 账户的id
-    var accountToId: Int    // 转账情况下，去哪个的账单id
+    var accountToId: Int    // 转账情况下的目标账户id（非转账时为0）
     var typeId: Int         // 账单分类
-    var isCollect: Bool     // 是否收藏
+    var isCollect: Bool     // 是否收藏（后端字段名是 isCollect）
     var note: String        // 备注
 }
 
@@ -150,38 +150,40 @@ class DetailStore: ObservableObject {
     }
     
     // 加载当月流水信息
-    // TODO 为什么失效了呢？
     func loadData() {
-        // 此处需要通过变量拼接URL 2025-01
         let url = URL(string: "\(APIConfig.baseURL)/flow/getFlowListMain/3/0/\(yearAndMonth)")!
-        print("Final URL: \(url)")
+        print("📅 加载流水 URL: \(url)")
+        
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
-                print("No data received: \(error?.localizedDescription ?? "Unknown error")")
+                print("❌ No data received: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
             
-            print("data是：", data)
-            
-//            guard let baseDto = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
-//                    print("Unable to decode JSON data")
-//                    return
-//            }
+            // 打印响应内容便于调试
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("📅 流水响应: \(responseString)")
+            }
             
             do {
                 let baseDto = try JSONDecoder().decode(DetailResponse.self, from: data)
                 DispatchQueue.main.async {
                     self.flowListDto = baseDto.data
+                    print("✅ 流水加载成功，共 \(baseDto.data.flows.count) 条")
                 }
             } catch {
-                print("JSON decode error: \(error)")
+                print("❌ JSON decode error: \(error)")
+                // 解析失败时，设置空数据，避免显示旧数据
+                DispatchQueue.main.async {
+                    self.flowListDto = FlowListDto(
+                        totalIn: "0",
+                        totalOut: "0",
+                        totalEarn: "0",
+                        typeList: [],
+                        flows: []
+                    )
+                }
             }
-            
-            // 被Published修饰的属性，必须在主线程上更新
-//            DispatchQueue.main.async {
-//                print(baseDto.data)
-//                self.flowListDto = baseDto.data
-//            }
         }.resume()
     }
     
@@ -219,39 +221,51 @@ class DetailStore: ObservableObject {
         
     }
     
-    // TODO 删：删除一条流水记录
+    // 删：删除一条流水记录
     // http://localhost:8085/flow/deleteFlow/{id}
     func deleteFlow(flowId: Int){
-        print("准备删除的flow的ID是")
-        print(flowId)
+        print("═══════════════════════════════════════")
+        print("🗑️ 开始删除流水...")
+        print("🗑️ Flow ID: \(flowId)")
         
         guard let url = URL(string: "\(APIConfig.baseURL)/flow/deleteFlow/\(flowId)") else {
-                print("Invalid URL")
-                return
-            }
+            print("❌ Invalid URL")
+            return
+        }
         
-        print(url)
+        print("🗑️ 请求 URL: \(url)")
         
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
             
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            // 打印响应状态码
+            if let httpResponse = response as? HTTPURLResponse {
+                print("📥 响应状态码: \(httpResponse.statusCode)")
+            }
+            
+            // 打印响应内容
+            if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                print("📥 响应内容: \(responseString)")
+            }
+            
             if let error = error {
-                print("Error with request: \(error)")
+                print("❌ 请求错误: \(error.localizedDescription)")
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                print("Server error")
+                print("❌ 服务器错误")
                 return
             }
             
             // 更新published的属性
             DispatchQueue.main.async {
-                // 在成功新增之后，更新本地数据
-                // 从属性：flows列表（一组FlowListSingleDto）中找到对应的id,并删除
+                // 在成功删除之后，更新本地数据
                 self.flowListDto.flows.removeAll { $0.id == flowId }
+                print("✅ 删除成功，已从本地列表移除")
+                print("═══════════════════════════════════════")
             }
         }
         task.resume()
@@ -325,6 +339,7 @@ class DetailStore: ObservableObject {
     // http://localhost:8085/flow/makeExcel/2025-02
     func makeExcel(completion: @escaping (Bool, String) -> Void) {
         let url = URL(string: "\(APIConfig.baseURL)/flow/makeExcel/\(yearAndMonth)")!
+        print("📊 生成报表 URL: \(url)")
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
@@ -334,18 +349,32 @@ class DetailStore: ObservableObject {
                 return
             }
             
-            guard let response = try? JSONDecoder().decode(DetailResponse.self, from: data) else {
-                DispatchQueue.main.async {
-                    completion(false, "响应解析失败")
-                }
-                return
+            // 打印响应内容便于调试
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("📊 报表响应: \(responseString)")
             }
             
-            DispatchQueue.main.async {
-                if response.code == 0 {
-                    completion(true, "✅ 报表生成成功，已发邮件")
+            // 尝试解析为通用响应格式
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+                   let code = json["code"] as? Int {
+                    let msg = json["msg"] as? String ?? ""
+                    DispatchQueue.main.async {
+                        if code == 0 {
+                            completion(true, "✅ 报表生成成功，已发邮件")
+                        } else {
+                            completion(false, "生成失败：\(msg)")
+                        }
+                    }
                 } else {
-                    completion(false, "生成失败：\(response.msg)")
+                    DispatchQueue.main.async {
+                        completion(false, "响应格式错误")
+                    }
+                }
+            } catch {
+                print("📊 报表解析错误: \(error)")
+                DispatchQueue.main.async {
+                    completion(false, "响应解析失败：\(error.localizedDescription)")
                 }
             }
         }.resume()
@@ -365,6 +394,7 @@ class DetailStore: ObservableObject {
                 if let compressedData = flowImg.jpegData(compressionQuality: quality) {
                     if compressedData.count < maximumFileSize {
                         imageData = compressedData
+                        print("📷 图片压缩成功，质量: \(quality)，大小: \(compressedData.count) bytes")
                         break
                     }
                 }
@@ -372,15 +402,24 @@ class DetailStore: ObservableObject {
             
             // 将 UIImage 转换为 JPEG 数据
             guard let jpegData = imageData else {
-                print("Failed to compress image within the size limit.")
+                print("❌ 图片压缩失败：无法将图片压缩到1MB以内")
+                DispatchQueue.main.async {
+                    completion("😭 图片压缩失败")
+                }
                 return
             }
             
             // 创建请求的 URL
-            guard let url = URL(string: "\(APIConfig.baseURL)/flow/analyzeFlowByAi") else {
-                print("Invalid URL")
+            let urlString = "\(APIConfig.baseURL)/flow/analyzeFlowByAi"
+            guard let url = URL(string: urlString) else {
+                print("❌ Invalid URL: \(urlString)")
+                DispatchQueue.main.async {
+                    completion("😭 URL无效")
+                }
                 return
             }
+            
+            print("📤 AI识别请求 URL: \(url)")
             
             // 创建可变请求对象
             var request = URLRequest(url: url)
@@ -398,115 +437,178 @@ class DetailStore: ObservableObject {
             body.append("--\(boundary)--\r\n".data(using: .utf8)!)
             request.httpBody = body
             
+            print("📤 请求体大小: \(body.count) bytes")
+            
             // 创建 URLSession 数据任务
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                // 处理响应
+                // 处理网络错误
                 if let error = error {
-                    print("Error during request: \(error)")
+                    print("❌ 网络请求错误: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        completion("😭 网络错误: \(error.localizedDescription)")
+                    }
                     return
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    print("Invalid response")
+                    print("❌ 无效的响应")
+                    DispatchQueue.main.async {
+                        completion("😭 无效响应")
+                    }
                     return
+                }
+                
+                print("📥 响应状态码: \(httpResponse.statusCode)")
+                
+                // 打印响应内容
+                if let responseData = data, let responseString = String(data: responseData, encoding: .utf8) {
+                    print("📥 响应内容: \(responseString)")
                 }
                 
                 // 检查响应状态码
                 if (200...299).contains(httpResponse.statusCode) {
-                    print("Image uploaded successfully!")
+                    print("✅ 图片上传成功!")
                     
                     // 如果服务器返回了 JSON 数据，可以在此处解析
                     if let responseData = data {
                         do {
                             if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any],
                                let taskId = json["data"] as? String {
-                                completion(taskId)
+                                print("✅ 获取到任务ID: \(taskId)")
+                                DispatchQueue.main.async {
+                                    completion(taskId)
+                                }
                             } else {
-                                print("Invalid response format.")
-                                completion("👍添加成功")
+                                print("⚠️ 响应格式不符合预期，但上传成功")
+                                DispatchQueue.main.async {
+                                    completion("👍添加成功")
+                                }
                             }
                         } catch {
-                            print("Failed to parse JSON. Error: \(error)")
-                            completion("😭上传失败")
+                            print("❌ JSON解析失败: \(error)")
+                            DispatchQueue.main.async {
+                                completion("😭 解析响应失败")
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            completion("👍上传成功")
                         }
                     }
-                    else {
-                        print("Failed to upload image. HTTP Status Code: \(httpResponse.statusCode)")
+                } else {
+                    // 非200响应，上传失败
+                    print("❌ 服务器返回错误，状态码: \(httpResponse.statusCode)")
+                    DispatchQueue.main.async {
+                        completion("😭 上传失败，状态码: \(httpResponse.statusCode)")
                     }
-                    
-                    // 更新published的属性
-                    //                DispatchQueue.main.async {
-                    //                    // 平衡下来，还是重新加载一下数据比较快，完成比完美更重要
-                    //                    self.loadData()
-                    //                }
                 }
             }
-                // 启动http请求任务
-                task.resume()
-            }
+            // 启动http请求任务
+            task.resume()
+            print("📤 请求已发送...")
         }
+    }
         
     // 基于上一步获得的task_id，获得执行情况，code=0表示已经完成解析并更新入数据库；如果code=500表示还未完成
     // taskId有可能不传，证明没有AI分析任务，就是普通的刷新
     func getAnalysisResult(taskId: String?, completion: @escaping (Bool, String) -> Void) {
         // 如果没有taskId，说明没有AI任务，直接加载
-            guard let taskId = taskId, !taskId.isEmpty else {
-                print("无AI任务，直接加载数据")
-                completion(true, "直接加载，无AI任务")
-                return
-            }
+        guard let taskId = taskId, !taskId.isEmpty else {
+            print("🔄 无AI任务，直接加载数据")
+            completion(true, "直接加载，无AI任务")
+            return
+        }
         
         DispatchQueue.global().async {
             guard let url = URL(string: "\(APIConfig.baseURL)/flow/getAnalyzeFlowByAiResult?taskId=\(taskId)") else {
-                print("Invalid URL")
-                completion(false, "😭 查询失败：无效URL")
+                print("❌ Invalid URL")
+                DispatchQueue.main.async {
+                    completion(false, "😭 查询失败：无效URL")
+                }
                 return
             }
-            print(url)
+            
+            print("🤖 查询AI分析结果...")
+            print("📤 请求URL: \(url)")
+            
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             
             let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                // 打印响应状态码
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("📥 响应状态码: \(httpResponse.statusCode)")
+                }
+                
                 if let error = error {
-                    print("Error during request: \(error)")
-                    completion(false, "😭 网络请求失败")
+                    print("❌ 网络请求错误: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        completion(false, "😭 网络请求失败: \(error.localizedDescription)")
+                    }
                     return
                 }
                 
                 guard let responseData = data else {
-                    completion(false, "😭 没有返回数据")
+                    print("❌ 没有返回数据")
+                    DispatchQueue.main.async {
+                        completion(false, "😭 没有返回数据")
+                    }
                     return
                 }
                 
-                
                 do {
-                    // 测试返回结果
+                    // 打印原始响应内容
                     if let rawString = String(data: responseData, encoding: .utf8) {
-                        print("原始响应字符串：\(rawString)")
+                        print("═══════════════════════════════════════")
+                        print("🤖 AI分析结果（原始响应）:")
+                        print(rawString)
+                        print("═══════════════════════════════════════")
                     }
                     
-                    if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any],
-                       let code = json["code"] as? Int {
+                    if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
+                        let code = json["code"] as? Int ?? -1
                         let msg = json["msg"] as? String ?? ""
                         
+                        print("📊 响应解析:")
+                        print("   - code: \(code)")
+                        print("   - msg: \(msg)")
+                        
+                        // 打印 data 字段（AI识别出的流水数据）
+                        if let dataField = json["data"] {
+                            print("   - data: \(dataField)")
+                        }
+                        
                         if code == 0 {
-                            completion(true, "解析完成")
-                            } else if code == 500 && msg == "数据已写入，无需重复操作" {
+                            print("✅ AI分析完成，数据已写入")
+                            DispatchQueue.main.async {
+                                completion(true, "解析完成")
+                            }
+                        } else if code == 500 && msg == "数据已写入，无需重复操作" {
+                            print("✅ 数据已存在，无需重复操作")
+                            DispatchQueue.main.async {
                                 completion(true, "已存在，直接加载")
-                            } else {
-                                completion(false, "解析未完成，请稍后再试")
                             }
                         } else {
-                        completion(false, "😭 解析JSON失败")
+                            print("⏳ 解析未完成，code=\(code), msg=\(msg)")
+                            DispatchQueue.main.async {
+                                completion(false, "解析未完成，请稍后再试")
+                            }
+                        }
+                    } else {
+                        print("❌ JSON解析失败：无法转换为字典")
+                        DispatchQueue.main.async {
+                            completion(false, "😭 解析JSON失败")
+                        }
                     }
                 } catch {
-                    print("JSON parse error: \(error)")
-                    completion(false, "😭 JSON解析异常")
+                    print("❌ JSON解析异常: \(error)")
+                    DispatchQueue.main.async {
+                        completion(false, "😭 JSON解析异常")
+                    }
                 }
             }
             task.resume()
         }
     }
-
 }
     

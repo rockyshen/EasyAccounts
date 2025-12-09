@@ -8,10 +8,8 @@
 import SwiftUI
 
 struct AccountList: View {
-    // 这里重复new一个store，会不会导致数据不更新？
-    var accountStore: AccountStore
-    
-    var accounts: [AccountResponseDto]
+    // 使用 @ObservedObject 确保数据更新时视图自动刷新
+    @ObservedObject var accountStore: AccountStore
     
     @State var editingAccount: AccountResponseDto?
     
@@ -21,7 +19,7 @@ struct AccountList: View {
     
     var body: some View {
         List {
-            ForEach(accounts) {account in
+            ForEach(accountStore.accountResponseDtoList) {account in
                 AccountView(accountResponseDto: account)
                     .swipeActions(edge: .trailing){
                         Button("删除",role: .destructive){
@@ -39,6 +37,9 @@ struct AccountList: View {
             }
         }
         .listStyle(PlainListStyle())
+        .refreshable {
+            accountStore.loadAccounts()
+        }
         .sheet(item: $editingAccount, content: {account in
             AccountEditView(
                 account: account,
@@ -64,9 +65,5 @@ struct AccountList: View {
 }
 
 #Preview {
-    AccountList(accountStore:AccountStore(), accounts: [
-        AccountResponseDto(id: 1, name: "SwiftBank", money: "100", exemptMoney: "0", card: "0000-0000-0000-0000", createTime: nil, note: "备注"),
-        AccountResponseDto(id: 2, name: "TestBank", money: "88", exemptMoney: "0", card: "0000-0000-0000-1234", createTime: nil, note: "备注"),
-        
-    ])
+    AccountList(accountStore: AccountStore())
 }
