@@ -187,6 +187,74 @@ class DetailStore: ObservableObject {
         }.resume()
     }
     
+    // 加载时间范围内的流水信息（用于统计页）
+    func loadDataForRange(startYear: Int, startMonth: Int, endYear: Int, endMonth: Int) {
+        print("📊 开始加载时间范围数据: \(startYear)-\(startMonth) 至 \(endYear)-\(endMonth)")
+        
+        // 生成时间范围内的所有月份
+        var months: [String] = []
+        var currentYear = startYear
+        var currentMonth = startMonth
+        
+        while currentYear < endYear || (currentYear == endYear && currentMonth <= endMonth) {
+            let monthString = String(format: "%04d-%02d", currentYear, currentMonth)
+            months.append(monthString)
+            
+            currentMonth += 1
+            if currentMonth > 12 {
+                currentMonth = 1
+                currentYear += 1
+            }
+        }
+        
+        print("📊 需要加载的月份: \(months)")
+        
+        // 使用 DispatchGroup 并行加载所有月份数据
+        let group = DispatchGroup()
+        var allFlows: [FlowListSingleDto] = []
+        var totalIn: Double = 0
+        var totalOut: Double = 0
+        let lock = NSLock()
+        
+        for month in months {
+            group.enter()
+            let url = URL(string: "\(APIConfig.baseURL)/flow/getFlowListMain/3/0/\(month)")!
+            
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                defer { group.leave() }
+                
+                guard let data = data else {
+                    print("❌ 加载 \(month) 失败: \(error?.localizedDescription ?? "Unknown error")")
+                    return
+                }
+                
+                do {
+                    let baseDto = try JSONDecoder().decode(DetailResponse.self, from: data)
+                    lock.lock()
+                    allFlows.append(contentsOf: baseDto.data.flows)
+                    totalIn += Double(baseDto.data.totalIn) ?? 0
+                    totalOut += Double(baseDto.data.totalOut) ?? 0
+                    lock.unlock()
+                    print("✅ 加载 \(month) 成功，\(baseDto.data.flows.count) 条流水")
+                } catch {
+                    print("❌ 解析 \(month) 失败: \(error)")
+                }
+            }.resume()
+        }
+        
+        group.notify(queue: .main) {
+            let earn = totalIn - totalOut
+            self.flowListDto = FlowListDto(
+                totalIn: String(format: "%.2f", totalIn),
+                totalOut: String(format: "%.2f", totalOut),
+                totalEarn: String(format: "%.2f", earn),
+                typeList: [],
+                flows: allFlows
+            )
+            print("📊 时间范围数据加载完成，共 \(allFlows.count) 条流水，收入: \(totalIn)，支出: \(totalOut)")
+        }
+    }
+    
     // 增：添加一条流水记录
     func addFlow(flowAddRequestDto: FlowAddRequestDto){
         if let url = URL(string: "\(APIConfig.baseURL)/flow/addFlow") {

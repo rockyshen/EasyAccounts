@@ -356,99 +356,114 @@ struct FlowListGrouped: View {
         List {
             // MARK: - 月度收支情况 Section
             Section {
-                VStack(spacing: 12) {
-                    HStack(alignment: .top) {
-                        // 左侧收支信息
-                        VStack(alignment: .leading, spacing: 6) {
-                            HStack(spacing: 8) {
-                                Text("当月总收入：")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blackDarkMode)
-                                Text("¥\(totalIn)")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.green)
+                HStack(alignment: .top, spacing: 12) {
+                    // 左侧：收支统计信息
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 4) {
+                            Text("收入：")
+                                .font(.subheadline)
+                                .foregroundColor(.blackDarkMode)
+                            Text("¥\(totalIn)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.green)
+                        }
+                        .lineLimit(1)
+                        
+                        HStack(spacing: 4) {
+                            Text("支出：")
+                                .font(.subheadline)
+                                .foregroundColor(.blackDarkMode)
+                            Text("¥\(totalOut)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.red)
+                        }
+                        .lineLimit(1)
+                        
+                        HStack(spacing: 4) {
+                            Text("结余：")
+                                .font(.subheadline)
+                                .foregroundColor(.blackDarkMode)
+                            Text("¥\(monthBalance)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.blackDarkMode)
+                        }
+                        .lineLimit(1)
+                    }
+                    .fixedSize(horizontal: true, vertical: false)
+                    
+                    Spacer()
+                    
+                    // 右侧：年月选择器 + 生成报表按钮（垂直排列，居中对齐）
+                    VStack(alignment: .center, spacing: 10) {
+                        // 年月选择器
+                        HStack(spacing: 4) {
+                            Button {
+                                print("⬅️ 点击上个月")
+                                decrementMonth()
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.accentColor)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .cornerRadius(6)
                             }
+                            .buttonStyle(.plain)
                             
-                            HStack(spacing: 8) {
-                                Text("当月总支出：")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blackDarkMode)
-                                Text("¥\(totalOut)")
+                            HStack(spacing: 4) {
+                                Image(systemName: "calendar")
+                                    .font(.caption)
+                                    .foregroundColor(.accentColor)
+                                Text(yearMonthString)
                                     .font(.subheadline)
                                     .fontWeight(.medium)
-                                    .foregroundColor(.red)
+                                    .foregroundColor(.blackDarkMode)
                             }
+                            .frame(width: 100, height: 32)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
+                            )
                             
-                            HStack(spacing: 8) {
-                                Text("当月结余：")
-                                    .font(.subheadline)
-                                    .foregroundColor(.blackDarkMode)
-                                Text("¥\(monthBalance)")
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.blackDarkMode)
+                            Button {
+                                print("➡️ 点击下个月")
+                                incrementMonth()
+                            } label: {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.accentColor)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .cornerRadius(6)
                             }
+                            .buttonStyle(.plain)
                         }
                         
-                        Spacer()
-                        
-                        // 右侧月份选择器
-                        VStack(spacing: 8) {
-                            HStack(spacing: 0) {
-                                Button(action: decrementMonth) {
-                                    Image(systemName: "minus")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .frame(width: 28, height: 28)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 6)
-                                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                        )
-                                }
-                                
-                                HStack(spacing: 4) {
-                                    Image(systemName: "clock")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                    Text(yearMonthString)
-                                        .font(.caption)
-                                        .foregroundColor(.blackDarkMode)
-                                }
-                                .frame(width: 90, height: 28)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                )
-                                
-                                Button(action: incrementMonth) {
-                                    Image(systemName: "plus")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .frame(width: 28, height: 28)
-                                        .background(
-                                            RoundedRectangle(cornerRadius: 6)
-                                                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                        )
-                                }
-                            }
-                            
-                            // 生成报表按钮
-                            Button(action: makeExcel) {
+                        // 生成报表按钮（居中）
+                        Button {
+                            print("📊 点击生成报表")
+                            makeExcel()
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "doc.text")
+                                    .font(.caption)
                                 Text("生成报表")
                                     .font(.caption)
-                                    .foregroundColor(.blackDarkMode)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 16)
-                                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-                                    )
                             }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.accentColor)
+                            .cornerRadius(16)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
-                .listRowInsets(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+                .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+                .padding(.horizontal, 16)
             } header: {
                 HStack {
                     Rectangle().frame(height: 1).foregroundColor(.gray.opacity(0.3))

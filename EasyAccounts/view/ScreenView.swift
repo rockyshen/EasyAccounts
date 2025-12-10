@@ -226,23 +226,40 @@ struct ScreenView: View {
             }
             .listStyle(PlainListStyle())
             .refreshable {
-                detailStore.loadData()
+                loadStatData()
             }
         }
         .background(Color(UIColor.systemGroupedBackground))
+        // 页面加载时获取数据
+        .onAppear {
+            loadStatData()
+        }
         // 统计条件弹窗
         .sheet(isPresented: $showConditionSheet) {
             StatConditionSheet(
                 startYear: $startYear,
                 startMonth: $startMonth,
                 endYear: $endYear,
-                endMonth: $endMonth
+                endMonth: $endMonth,
+                onConfirm: {
+                    loadStatData()
+                }
             )
         }
         // 图表弹窗
         .sheet(isPresented: $showChartView) {
             ChartView(categoryStats: categoryStats, selectedType: selectedType)
         }
+    }
+    
+    // 加载统计数据
+    private func loadStatData() {
+        detailStore.loadDataForRange(
+            startYear: startYear,
+            startMonth: startMonth,
+            endYear: endYear,
+            endMonth: endMonth
+        )
     }
 }
 
@@ -253,6 +270,7 @@ struct StatConditionSheet: View {
     @Binding var startMonth: Int
     @Binding var endYear: Int
     @Binding var endMonth: Int
+    var onConfirm: () -> Void
     
     let years = Array(2020...2030)
     let months = Array(1...12)
@@ -296,6 +314,7 @@ struct StatConditionSheet: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("确定") {
+                        onConfirm()
                         dismiss()
                     }
                 }
