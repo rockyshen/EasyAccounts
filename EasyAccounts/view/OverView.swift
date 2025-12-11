@@ -241,6 +241,11 @@ struct OverView: View {
                 }
             }
             .background(Color(UIColor.systemGroupedBackground))
+            .refreshable {
+                // 刷新首页数据和月度数据
+                homeStore.loadData()
+                homeStore.loadMonthlyData(year: selectedYear)
+            }
         }
         .sheet(isPresented: $showAccountDetail) {
             // 账户详情弹窗

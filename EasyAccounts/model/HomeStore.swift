@@ -56,38 +56,49 @@ struct MonthlyFlowData: Codable {
 }
 
 class HomeStore: ObservableObject {
-    // Published注解，必须声明为实例对象
+    // 缓存 Key
+    private static let homeDtoCacheKey = "HomeStore.homeDto"
+    
+    // Published注解，必须声明为实例对象（初始为空数据，从缓存加载）
     @Published var homeDto = HomeDto(
-        accounts: [
-            HomeAccountBean(accountAsset: "1000",
-                            accountName: "测试账户",
-                            exemptAsset: "200",
-                            id: 1,
-                            note: "Main savings account",
-                            percent: "10%"),
-            HomeAccountBean(accountAsset: "2500",
-                            accountName: "Swift Bank",
-                            exemptAsset: "300",
-                            id: 2,
-                            note: "Everyday transactions",
-                            percent: "15%")
-        ],
-        curIncome: "12000",
-        curOutCome: "8000",
-        netAsset: "19000",
-        totalAsset: "20000",
-        yearBalance: "4000",
-        yearIncome: "150000",
-        yearOutCome: "100000")
+        accounts: [],
+        curIncome: "0",
+        curOutCome: "0",
+        netAsset: "0",
+        totalAsset: "0",
+        yearBalance: "0",
+        yearIncome: "0",
+        yearOutCome: "0"
+    )
     
     // 月度数据列表
     @Published var monthlyDataList: [MonthlyData] = []
     @Published var isLoadingMonthly = false
     
     init() {
+        // 优先从缓存加载数据
+        loadFromCache()
+        // 然后从网络刷新
         loadData()
         // 默认加载当前年份的月度数据
         loadMonthlyData(year: Calendar.current.component(.year, from: Date()))
+    }
+    
+    // 从缓存加载数据
+    private func loadFromCache() {
+        if let data = UserDefaults.standard.data(forKey: Self.homeDtoCacheKey),
+           let cached = try? JSONDecoder().decode(HomeDto.self, from: data) {
+            self.homeDto = cached
+            print("📦 HomeStore: 从缓存加载数据成功")
+        }
+    }
+    
+    // 保存数据到缓存
+    private func saveToCache() {
+        if let data = try? JSONEncoder().encode(homeDto) {
+            UserDefaults.standard.set(data, forKey: Self.homeDtoCacheKey)
+            print("💾 HomeStore: 数据已保存到缓存")
+        }
     }
     
     // 加载"总览页"数据
@@ -107,6 +118,8 @@ class HomeStore: ObservableObject {
             
             DispatchQueue.main.async {
                 self.homeDto = baseDto.data
+                // 保存到缓存
+                self.saveToCache()
             }
         }.resume()
     }

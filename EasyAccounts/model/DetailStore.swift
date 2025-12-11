@@ -89,45 +89,24 @@ struct Flow {
 
 
 class DetailStore: ObservableObject {
+    // 缓存 Key 前缀
+    private static let flowListCacheKeyPrefix = "DetailStore.flowList."
+    
+    // Published注解（初始为空数据，从缓存加载）
     @Published var flowListDto = FlowListDto(
-        totalIn: "300",
-        totalOut: "150",
-        totalEarn: "150",
-        typeList: [
-            FlowTypeDto(typeName: "购物", money: "30", typeId: 101, parent: false, children: []),
-            FlowTypeDto(typeName: "交通", money: "30", typeId: 102, parent: false, children: []),
-            FlowTypeDto(typeName: "娱乐", money: "30", typeId: 103, parent: false, children: []),
-            FlowTypeDto(typeName: "工资", money: "30", typeId: 104, parent: false, children: [])
-        ],
-        flows: [
-            FlowListSingleDto(id: 1,
-                              money: "100",
-                              exempt: false,
-                              collect: true,
-                              handle: 0,
-                              note: "工资收入💰",
-                              toAName: "Savings Account",
-                              aname: "测试账户",
-                              tname: "工资",
-                              hname: "收入",
-                              fdate: "2023-01-10"),
-            FlowListSingleDto(id: 2,
-                              money: "200",
-                              exempt: true,
-                              collect: false,
-                              handle: 1,
-                              note: "霸王茶姬奶茶🥤",
-                              toAName: nil,
-                              aname: "Swift Bank",
-                              tname: "购物",
-                              hname: "支出",
-                              fdate: "2023-02-15")
-        ]
+        totalIn: "0",
+        totalOut: "0",
+        totalEarn: "0",
+        typeList: [],
+        flows: []
     )
     
-    
-    var yearAndMonth: String{
-        didSet { loadData() }
+    var yearAndMonth: String {
+        didSet {
+            // 先从缓存加载，再从网络刷新
+            loadFromCache()
+            loadData()
+        }
     }
     
     init() {
@@ -138,7 +117,34 @@ class DetailStore: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM"
         // 格式化当前日期
         self.yearAndMonth = dateFormatter.string(from: currentDate)
+        // 优先从缓存加载数据
+        loadFromCache()
+        // 然后从网络刷新
         loadData()
+    }
+    
+    // 获取当前月份的缓存 Key
+    private func cacheKey() -> String {
+        return Self.flowListCacheKeyPrefix + yearAndMonth
+    }
+    
+    // 从缓存加载数据
+    private func loadFromCache() {
+        let key = cacheKey()
+        if let data = UserDefaults.standard.data(forKey: key),
+           let cached = try? JSONDecoder().decode(FlowListDto.self, from: data) {
+            self.flowListDto = cached
+            print("📦 DetailStore: 从缓存加载 \(yearAndMonth) 数据成功，共 \(cached.flows.count) 条")
+        }
+    }
+    
+    // 保存数据到缓存
+    private func saveToCache() {
+        let key = cacheKey()
+        if let data = try? JSONEncoder().encode(flowListDto) {
+            UserDefaults.standard.set(data, forKey: key)
+            print("💾 DetailStore: \(yearAndMonth) 数据已保存到缓存")
+        }
     }
     
     func updateYearAndMonth(selectDate: Date) {
@@ -169,6 +175,8 @@ class DetailStore: ObservableObject {
                 let baseDto = try JSONDecoder().decode(DetailResponse.self, from: data)
                 DispatchQueue.main.async {
                     self.flowListDto = baseDto.data
+                    // 保存到缓存
+                    self.saveToCache()
                     print("✅ 流水加载成功，共 \(baseDto.data.flows.count) 条")
                 }
             } catch {
