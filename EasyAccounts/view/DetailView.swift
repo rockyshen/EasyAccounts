@@ -1,8 +1,7 @@
 //
 //  Flow.swift
 //  EasyAccounts
-//  流水页，我取名为：DetailView，区别于FlowView
-//  FlowView是单条Flow展示的页面！
+//  流水页 - 深色科技风格
 //  Created by 沈俊杰 on 2025/2/2.
 //
 
@@ -16,15 +15,15 @@ struct AlertMessage: Identifiable {
 
 // 筛选选项
 enum FilterOption: String, CaseIterable {
-    case all = "全部"
-    case income = "收入"
-    case expense = "支出"
+    case all = "ALL"
+    case income = "INCOME"
+    case expense = "EXPENSE"
 }
 
 // 排序选项
 enum SortOption: String, CaseIterable {
-    case byTime = "按时间排序"
-    case byAmount = "按金额排序"
+    case byTime = "TIME"
+    case byAmount = "AMOUNT"
 }
 
 struct DetailView: View {
@@ -110,7 +109,6 @@ struct DetailView: View {
     private var filteredFlows: [FlowListSingleDto] {
         var flows = detailStore.flowListDto.flows
         
-        // 根据筛选条件过滤
         switch selectedFilter {
         case .all:
             break
@@ -120,7 +118,6 @@ struct DetailView: View {
             flows = flows.filter { $0.hname == "支出" }
         }
         
-        // 根据排序条件排序
         switch selectedSort {
         case .byTime:
             flows.sort { $0.fdate > $1.fdate }
@@ -133,62 +130,117 @@ struct DetailView: View {
     
     var body: some View {
         ZStack {
+            // 深色背景
+            Color.themeBg.ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 // MARK: - 顶部标题栏
-                HStack {
-                    Spacer()
-                    Text("明细")
-                        .font(.headline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.white)
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text("$ transactions --all")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.themeAccent)
+                        
+                        Spacer()
+                        
+                        // 月份切换
+                        HStack(spacing: 8) {
+                            Button(action: decrementMonth) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.themeTextSecondary)
+                            }
+                            
+                            Text(yearMonthString)
+                                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                                .foregroundColor(.themeTextPrimary)
+                            
+                            Button(action: incrementMonth) {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.themeTextSecondary)
+                            }
+                        }
+                    }
+                    
+                    Text("// Complete transaction history")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(.themeTextSecondary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(Color.themeBg)
+                
+                // MARK: - 月度统计卡片
+                HStack(spacing: 24) {
+                    // 收入
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("↑ INCOME")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.themeTextSecondary)
+                        Text("¥\(detailStore.flowListDto.totalIn)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.themeIncome)
+                    }
+                    
+                    // 支出
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("↓ EXPENSE")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.themeTextSecondary)
+                        Text("¥\(detailStore.flowListDto.totalOut)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.themeExpense)
+                    }
+                    
+                    // 结余
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("= BALANCE")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(.themeTextSecondary)
+                        Text("¥\(monthBalance)")
+                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                            .foregroundColor(.themeTextPrimary)
+                    }
+                    
                     Spacer()
                 }
+                .padding(16)
+                .background(Color.themeCardBg)
+                .cornerRadius(14)
                 .overlay(
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            showFilterSheet = true
-                        }) {
-                            Text("筛选")
-                                .font(.subheadline)
-                                .foregroundColor(.white)
-                        }
-                        .padding(.trailing, 16)
-                    }
+                    RoundedRectangle(cornerRadius: 14)
+                        .stroke(Color.themeBorderLight, lineWidth: 1)
                 )
-                .padding(.vertical, 12)
-                .background(Color.accentColor)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
                 
                 // MARK: - 筛选栏
                 HStack {
-                    // 左侧筛选
-                    Menu {
+                    // 筛选按钮组
+                    HStack(spacing: 8) {
                         ForEach(FilterOption.allCases, id: \.self) { option in
                             Button(action: {
                                 selectedFilter = option
                             }) {
-                                HStack {
-                                    Text(option.rawValue)
-                                    if selectedFilter == option {
-                                        Image(systemName: "checkmark")
-                                    }
-                                }
+                                Text(option.rawValue)
+                                    .font(.system(size: 11, weight: .medium, design: .monospaced))
+                                    .foregroundColor(selectedFilter == option ? .black : .themeTextSecondary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(selectedFilter == option ? Color.themeAccent : Color.clear)
+                                    .cornerRadius(6)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 6)
+                                            .stroke(selectedFilter == option ? Color.clear : Color.themeBorderLight, lineWidth: 1)
+                                    )
                             }
-                        }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text(selectedFilter.rawValue)
-                                .font(.subheadline)
-                                .foregroundColor(.accentColor)
-                            Image(systemName: "chevron.down")
-                                .font(.caption)
-                                .foregroundColor(.accentColor)
                         }
                     }
                     
                     Spacer()
                     
-                    // 右侧排序
+                    // 排序
                     Menu {
                         ForEach(SortOption.allCases, id: \.self) { option in
                             Button(action: {
@@ -204,50 +256,38 @@ struct DetailView: View {
                         }
                     } label: {
                         HStack(spacing: 4) {
-                            Text(selectedSort.rawValue)
-                                .font(.subheadline)
-                                .foregroundColor(.blackDarkMode)
+                            Text("sort: \(selectedSort.rawValue)")
+                                .font(.system(size: 11, design: .monospaced))
+                                .foregroundColor(.themeTextSecondary)
                             Image(systemName: "chevron.down")
-                                .font(.caption)
-                                .foregroundColor(.gray)
+                                .font(.system(size: 10))
+                                .foregroundColor(.themeTextSecondary)
                         }
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Color.whiteDarkMode)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 12)
                 
-                // MARK: - 流水列表（使用 List 作为主滚动容器）
-                FlowListGrouped(
-                    flows: filteredFlows,
-                    detailStore: detailStore,
-                    accountStore: accountStore,
-                    actionStore: actionStore,
-                    typeStore: typeStore,
-                    totalIn: detailStore.flowListDto.totalIn,
-                    totalOut: detailStore.flowListDto.totalOut,
-                    monthBalance: monthBalance,
-                    yearMonthString: yearMonthString,
-                    decrementMonth: decrementMonth,
-                    incrementMonth: incrementMonth,
-                    makeExcel: {
-                        detailStore.makeExcel { success, message in
-                            alertMessage = AlertMessage(message: success ? "✅报表生成成功，已发邮件" : message)
+                // MARK: - 流水列表
+                ScrollView {
+                    LazyVStack(spacing: 8) {
+                        ForEach(filteredFlows) { flow in
+                            DetailFlowCard(
+                                flow: flow,
+                                onEdit: {
+                                    // 编辑处理
+                                },
+                                onDelete: {
+                                    detailStore.deleteFlow(flowId: flow.id)
+                                }
+                            )
                         }
                     }
-                )
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 100)
+                }
                 .refreshable {
-                    isLoading = true
-                    detailStore.getAnalysisResult(taskId: taskId) { success, message in
-                        DispatchQueue.main.async {
-                            if success {
-                                detailStore.loadData()
-                            } else {
-                                alertMessage = AlertMessage(message: message)
-                            }
-                            self.isLoading = false
-                        }
-                    }
+                    detailStore.loadData()
                 }
             }
             
@@ -268,15 +308,22 @@ struct DetailView: View {
                         }) {
                             Label("AI识别", systemImage: "camera")
                         }
+                        
+                        Button(action: {
+                            detailStore.makeExcel { success, message in
+                                alertMessage = AlertMessage(message: success ? "✅报表生成成功" : message)
+                            }
+                        }) {
+                            Label("生成报表", systemImage: "doc.text")
+                        }
                     } label: {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
+                        Text("+")
+                            .font(.system(size: 28, weight: .bold, design: .monospaced))
+                            .foregroundColor(.black)
                             .frame(width: 56, height: 56)
-                            .background(Color.accentColor)
+                            .background(Color.themeAccent)
                             .clipShape(Circle())
-                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                            .shadow(color: Color.themeAccent.opacity(0.4), radius: 8, x: 0, y: 4)
                     }
                     .padding(.trailing, 20)
                     .padding(.bottom, 20)
@@ -287,7 +334,6 @@ struct DetailView: View {
         .sheet(isPresented: $isShowingAddFlowView) {
             AddFlowView { newFlowAddRequestDto in
                 detailStore.addFlow(flowAddRequestDto: newFlowAddRequestDto)
-                // 延迟刷新数据
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     detailStore.loadData()
                 }
@@ -313,297 +359,107 @@ struct DetailView: View {
         .alert(item: $alertMessage) { alert in
             Alert(title: Text("提示"), message: Text(alert.message), dismissButton: .default(Text("好")))
         }
-        // AI识别过程中的加载指示器
+        // 加载指示器
         .overlay(
             Group {
                 if isLoading {
                     VStack {
-                        ProgressView("处理中...")
-                            .foregroundColor(.blackDarkMode)
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .themeAccent))
+                        Text("处理中...")
+                            .font(.system(size: 12, design: .monospaced))
+                            .foregroundColor(.themeTextSecondary)
+                            .padding(.top, 8)
                     }
-                    .padding()
-                    .background(Color.whiteDarkMode)
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
+                    .padding(24)
+                    .background(Color.themeCardBg)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.themeBorderLight, lineWidth: 1)
+                    )
                 }
             }
         )
     }
 }
 
-// MARK: - 按日期分组的流水列表
-struct FlowListGrouped: View {
-    var flows: [FlowListSingleDto]
-    var detailStore: DetailStore
-    var accountStore: AccountStore
-    var actionStore: ActionStore
-    var typeStore: TypeStore
+// MARK: - 流水卡片组件
+struct DetailFlowCard: View {
+    let flow: FlowListSingleDto
+    var onEdit: () -> Void
+    var onDelete: () -> Void
     
-    // 月度收支信息
-    var totalIn: String
-    var totalOut: String
-    var monthBalance: String
-    var yearMonthString: String
-    var decrementMonth: () -> Void
-    var incrementMonth: () -> Void
-    var makeExcel: () -> Void
-    
-    @State private var editingFlow: FlowListSingleDto?
-    @State private var deletableFlow: DeletableFlow?
     @State private var showDeleteAlert = false
     
-    var body: some View {
-        List {
-            // MARK: - 月度收支情况 Section
-            Section {
-                HStack(alignment: .top, spacing: 12) {
-                    // 左侧：收支统计信息
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 4) {
-                            Text("收入：")
-                                .font(.subheadline)
-                                .foregroundColor(.blackDarkMode)
-                            Text("¥\(totalIn)")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.green)
-                        }
-                        .lineLimit(1)
-                        
-                        HStack(spacing: 4) {
-                            Text("支出：")
-                                .font(.subheadline)
-                                .foregroundColor(.blackDarkMode)
-                            Text("¥\(totalOut)")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.red)
-                        }
-                        .lineLimit(1)
-                        
-                        HStack(spacing: 4) {
-                            Text("结余：")
-                                .font(.subheadline)
-                                .foregroundColor(.blackDarkMode)
-                            Text("¥\(monthBalance)")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundColor(.blackDarkMode)
-                        }
-                        .lineLimit(1)
-                    }
-                    .fixedSize(horizontal: true, vertical: false)
-                    
-                    Spacer()
-                    
-                    // 右侧：年月选择器 + 生成报表按钮（垂直排列，居中对齐）
-                    VStack(alignment: .center, spacing: 10) {
-                        // 年月选择器
-                        HStack(spacing: 4) {
-                            Button {
-                                print("⬅️ 点击上个月")
-                                decrementMonth()
-                            } label: {
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(.accentColor)
-                                    .frame(width: 32, height: 32)
-                                    .background(Color.accentColor.opacity(0.1))
-                                    .cornerRadius(6)
-                            }
-                            .buttonStyle(.plain)
-                            
-                            HStack(spacing: 4) {
-                                Image(systemName: "calendar")
-                                    .font(.caption)
-                                    .foregroundColor(.accentColor)
-                                Text(yearMonthString)
-                                    .font(.subheadline)
-                                    .fontWeight(.medium)
-                                    .foregroundColor(.blackDarkMode)
-                            }
-                            .frame(width: 100, height: 32)
-                            .background(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(Color.accentColor.opacity(0.5), lineWidth: 1)
-                            )
-                            
-                            Button {
-                                print("➡️ 点击下个月")
-                                incrementMonth()
-                            } label: {
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14, weight: .bold))
-                                    .foregroundColor(.accentColor)
-                                    .frame(width: 32, height: 32)
-                                    .background(Color.accentColor.opacity(0.1))
-                                    .cornerRadius(6)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        
-                        // 生成报表按钮（居中）
-                        Button {
-                            print("📊 点击生成报表")
-                            makeExcel()
-                        } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: "doc.text")
-                                    .font(.caption)
-                                Text("生成报表")
-                                    .font(.caption)
-                            }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.accentColor)
-                            .cornerRadius(16)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .listRowInsets(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
-                .padding(.horizontal, 16)
-            } header: {
-                HStack {
-                    Rectangle().frame(height: 1).foregroundColor(.gray.opacity(0.3))
-                    Text("月度收支情况")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .padding(.horizontal, 8)
-                    Rectangle().frame(height: 1).foregroundColor(.gray.opacity(0.3))
-                }
-                .textCase(nil)
-                .listRowInsets(EdgeInsets())
-            }
-            
-            // MARK: - 账本概览 Section（不再按日期分组，日期已在每条记录中显示）
-            Section {
-                ForEach(flows) { flow in
-                    FlowItemView(flow: flow)
-                        .listRowInsets(EdgeInsets())
-                        .listRowSeparator(.hidden)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                            Button(role: .destructive) {
-                                print("🗑️ 点击删除按钮，Flow ID: \(flow.id)")
-                                deletableFlow = DeletableFlow(flow: flow)
-                                showDeleteAlert = true
-                            } label: {
-                                Label("删除", systemImage: "trash")
-                            }
-                        }
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button {
-                                editingFlow = flow
-                            } label: {
-                                Label("编辑", systemImage: "pencil")
-                            }
-                            .tint(.blue)
-                        }
-                }
-            } header: {
-                HStack {
-                    Rectangle().frame(height: 1).foregroundColor(.gray.opacity(0.3))
-                    Text("账本概览")
-                        .font(.subheadline)
-                        .foregroundColor(.accentColor)
-                        .padding(.horizontal, 8)
-                    Rectangle().frame(height: 1).foregroundColor(.gray.opacity(0.3))
-                }
-                .textCase(nil)
-                .listRowInsets(EdgeInsets())
-            }
-        }
-        .listStyle(PlainListStyle())
-        .sheet(item: $editingFlow) { flow in
-            let newFlowAddRequestDto = FlowAddRequestDto(
-                money: flow.money,
-                fDate: flow.fdate,
-                createDate: "",
-                actionId: actionStore.getActionIdByhame(hname: flow.hname) ?? 0,
-                accountId: accountStore.getAccountIdByName(accountName: flow.aname) ?? 0,
-                accountToId: 0,  // 非转账时为0
-                typeId: typeStore.getTypeIdByName(typeName: flow.tname) ?? 0,
-                isCollect: flow.collect,
-                note: flow.note
-            )
-            
-            AddFlowView(flowAddRequestDto: newFlowAddRequestDto) { newFlowAddRequestDto in
-                detailStore.updateFlow(flowId: flow.id, flowAddRequestDto: newFlowAddRequestDto)
-            }
-        }
-        .alert("确认删除", isPresented: $showDeleteAlert) {
-            Button("取消", role: .cancel) {
-                deletableFlow = nil
-            }
-            Button("删除", role: .destructive) {
-                if let flow = deletableFlow?.flow {
-                    print("🗑️ 确认删除 Flow ID: \(flow.id)")
-                    detailStore.deleteFlow(flowId: flow.id)
-                }
-                deletableFlow = nil
-            }
-        } message: {
-            Text("您确定要删除这条流水吗？")
-        }
+    var isIncome: Bool {
+        flow.hname == "收入"
     }
-}
-
-// MARK: - 单条流水项视图（四行布局）
-struct FlowItemView: View {
-    var flow: FlowListSingleDto
     
     var body: some View {
-        HStack(spacing: 8) {
-            // 左侧：日期、分类、账户、备注（四行垂直排列）
-            VStack(alignment: .leading, spacing: 2) {
-                // 第一行：日期
-                Text(flow.fdate)
-                    .font(.caption)
-                    .foregroundColor(.gray)
+        HStack(spacing: 12) {
+            // 左侧符号
+            Text(isIncome ? ">" : "-")
+                .font(.system(size: 24, weight: .bold, design: .monospaced))
+                .foregroundColor(isIncome ? .themeAccent : .themeTextSecondary)
+                .frame(width: 28)
+            
+            // 中间信息
+            VStack(alignment: .leading, spacing: 4) {
+                Text(flow.note.isEmpty ? flow.tname : flow.note)
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundColor(.themeTextPrimary)
+                    .lineLimit(1)
                 
-                // 第二行：分类
-                Text(flow.tname)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blackDarkMode)
-                
-                // 第三行：账户
-                Text(flow.aname)
-                    .font(.caption)
-                    .foregroundColor(.accentColor)
-                
-                // 第四行：备注
-                if !flow.note.isEmpty {
-                    Text(flow.note)
-                        .font(.caption2)
-                        .foregroundColor(.gray)
-                        .lineLimit(1)
+                HStack(spacing: 8) {
+                    Text("[\(flow.tname)]")
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.themeTextSecondary)
+                    
+                    Text(flow.aname)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(.themeBlue)
                 }
             }
             
             Spacer()
             
-            // 右侧：金额和标签（垂直居中对齐）
+            // 右侧金额和日期
             VStack(alignment: .trailing, spacing: 4) {
-                Text("¥\(flow.money)")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.blackDarkMode)
+                Text("\(isIncome ? "+" : "-")\(flow.money)")
+                    .font(.system(size: 17, weight: .bold, design: .monospaced))
+                    .foregroundColor(isIncome ? .themeAccent : .themeTextPrimary)
                 
-                Text(flow.hname)
-                    .font(.caption2)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(flow.hname == "支出" ? Color.red : Color.green)
-                    .cornerRadius(3)
+                Text(flow.fdate)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundColor(.themeTextSecondary)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
-        .background(Color.whiteDarkMode)
-        .contentShape(Rectangle())  // 确保整个区域可响应手势
+        .padding(14)
+        .background(Color.themeCardBg)
+        .cornerRadius(14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.themeBorderLight, lineWidth: 1)
+        )
+        .contextMenu {
+            Button(action: onEdit) {
+                Label("编辑", systemImage: "pencil")
+            }
+            Button(role: .destructive, action: {
+                showDeleteAlert = true
+            }) {
+                Label("删除", systemImage: "trash")
+            }
+        }
+        .alert("确认删除", isPresented: $showDeleteAlert) {
+            Button("取消", role: .cancel) {}
+            Button("删除", role: .destructive) {
+                onDelete()
+            }
+        } message: {
+            Text("您确定要删除这条流水吗？")
+        }
     }
 }
 
